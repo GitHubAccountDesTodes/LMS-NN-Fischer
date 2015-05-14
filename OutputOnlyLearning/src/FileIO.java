@@ -97,44 +97,43 @@ public class FileIO {
 		value = new double[sizeCol][sizeRow];
 
 		byte x;
-		do{
-				String myString;
-				do{
-					x =fgetc();
-					if ((int)(x)==10){
-						if (col>maxCol){
-							maxCol=col;
-						}
-						if (col>0){
-							row++;
-						}
-						col=0;
+		do {
+			String myString;
+			do {
+				x =fgetc();
+				if ((int)(x)==10) {
+					if (col>maxCol) {
+						maxCol=col;
+					}
+					if (col>0) {
+						row++;
+					}
+					col=0;
 					
-					}
-				}while((x<'0' || x>'9') && x!='-' && x!='.' && x!=0);
-				fPointer--;
-				myString="";
-				do{
-					//System.out.println("t="+t+"length="+length);
-					x =fgetc();
-					if ((x>='0' && x<='9') || x=='.' || x=='-'){
-						myString += (char)(x);
-					}
+				}
+			} while((x<'0' || x>'9') && x!='-' && x!='.' && x!=0);
+			fPointer--;
+			myString="";
+			do {
+				//System.out.println("t="+t+"length="+length);
+				x =fgetc();
+				if ((x>='0' && x<='9') || x=='.' || x=='-') {
+					myString += (char)(x);
+				}
 
-				}while((x>='0' && x<='9') || x=='.'|| x=='-');
+			} while((x>='0' && x<='9') || x=='.'|| x=='-');
 				
-				if (myString.length()==0){
+			if (myString.length()==0) {
+			} else {
+				float y = Float.parseFloat(myString);		// first line defines number of input neurons
+				//System.out.println("readSingleValue = "+y);
+				if (row<sizeRow && col<sizeCol) {
+					value[col][row]= y;
+					col++;
+					maxRow=row;
 				}
-				else{
-					float y = Float.parseFloat(myString);		// first line defines number of input neurons
-					//System.out.println("readSingleValue = "+y);
-					if (row<sizeRow && col<sizeCol){
-						value[col][row]= y;
-						col++;
-						maxRow=row;
-					}
-				}
-		}while(fPointer<inText.length);
+			}
+		} while(fPointer<inText.length);
 
 		System.out.println(maxRow + ","+maxCol);
 		
@@ -144,7 +143,6 @@ public class FileIO {
 			}
 			System.out.println();
 		}
-		
 	}
 	/**
 	 * reads the file opened in the constructor in a buffer
