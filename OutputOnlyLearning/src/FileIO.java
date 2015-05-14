@@ -28,24 +28,25 @@ public class FileIO {
 	 * 
 	 * @param filename is the name of the file
 	 */
-	public FileIO(String filename){
+	public FileIO(String filename) {
 		file = new File(filename);
 		fPointer=0;
-		try{
+		try {
 			readFile();
-		}catch(IOException ex){System.out.println("File: Read Error...");}
+		} catch(IOException ex){
+			System.out.println("File: Read Error...");
+		}
 		//System.out.println(myString);	
 	}
 	/**
 	 * @brief: fgetc is similar to the c version and reads in a single character	
 	 * @return
 	 */
-	public byte fgetc()
-	{
-		if (fPointer<length){
+	public byte fgetc() {
+		if (fPointer<length) {
 			return inText[fPointer++];
 		}
-		else{
+		else {
 			return 0;
 		}
 	}
@@ -54,30 +55,30 @@ public class FileIO {
 	 * 
 	 * @return The read value is returned 
 	 */
-	public double readSingleValue(){
+	public double readSingleValue() {
 		String myString="";
 		//System.out.println("ReadSingleValue");
 
 		byte x;
 		
-		do{
+		do {
 			//System.out.println("t="+t+"length="+length);
 			x =fgetc();
-		}while((x<'0' || x>'9') && x!='.');
+		} while((x<'0' || x>'9') && x!='.');
 		fPointer--;
-		do{
+		do {
 			//System.out.println("t="+t+"length="+length);
 			x =fgetc();
-			if ((x>='0' && x<='9') || x=='.'){
+			if ((x>='0' && x<='9') || x=='.') {
 				myString += (char)(x);
 			}
 			
-		}while((x>='0' && x<='9') || x=='.');
+		} while((x>='0' && x<='9') || x=='.');
 		
-		if (myString.length()==0){
+		if (myString.length()==0) {
 			return 0.0;
 		}
-		else{
+		else {
 			float y = Float.parseFloat(myString);		// first line defines number of input neurons
 		//	System.out.println("readSingleValue = "+y);
 			return y;
@@ -189,29 +190,23 @@ public class FileIO {
 	 * @param fileName
 	 * @param buf
 	 */
-    public static void writeFile(String fileName, byte[] buf)
-    {
+    public static void writeFile(String fileName, byte[] buf) {
 		
 		FileOutputStream fos = null;
 		
-		try
-		{
+		try {
 		   fos = new FileOutputStream(fileName);
 		   fos.write(buf);
 		}
-		catch(IOException ex)
-		{
+		catch(IOException ex) {
 		   System.out.println(ex);
 		}
-		finally
-		{
+		finally {
 		   if(fos!=null)
-		      try
-		      {
+		      try {
 		         fos.close();
 		      }
-		      catch(Exception ex)
-		      {
+		      catch(Exception ex) {
 		      }
 		}
     }
