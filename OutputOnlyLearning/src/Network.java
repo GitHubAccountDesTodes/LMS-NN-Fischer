@@ -12,7 +12,9 @@
 
 public class Network {
 	public Neuron neuron[];
-	public int numWeights, numInputs, numNeurons;
+	public int numWeights;
+	public int numInputs;
+	public int numNeurons; //contains the number of hidden + output neurons
 	
 	/**
 	 * @brief: the Constructor to initialize the neural network
