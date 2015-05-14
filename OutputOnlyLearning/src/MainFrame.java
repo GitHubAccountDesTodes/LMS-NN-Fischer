@@ -20,17 +20,18 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	public static final int inputTableCols	= 30;
-	public static final int inputTableRows  = 10000;
-	public static final int	imageWidth		= 600;
-	public static final int	imageHeight		= 600;
-	public int 				frameWidth		= imageWidth + 100;
-	public int 				frameHeight		= imageHeight + 100;
-	public InputOutput		inputOutput		= new InputOutput(this);
-	public boolean			stop			= false;
-	ImagePanel				canvas			= new ImagePanel();
-	ImageObserver			imo				= null;
-	Image					renderTarget	= null;
+	public static final String inputFileName 	= "input.txt";
+	public static final int inputTableCols		= 30;
+	public static final int inputTableRows  	= 10000;
+	public static final int	imageWidth			= 600;
+	public static final int	imageHeight			= 600;
+	public int 				frameWidth			= imageWidth + 100;
+	public int 				frameHeight			= imageHeight + 100;
+	public InputOutput		inputOutput			= new InputOutput(this);
+	public boolean			stop				= false;
+	ImagePanel				canvas				= new ImagePanel();
+	ImageObserver			imo					= null;
+	Image					renderTarget		= null;
 
 	public MainFrame(String[] args) {
 		super("Output Only Learning Networks");
@@ -47,7 +48,7 @@ public class MainFrame extends JFrame {
 		canvas.img = createImage(imageWidth, imageHeight);
 		canvas.setLocation((frameWidth-getInsets().left-imageWidth)/2, (frameHeight-imageHeight)/2);
 		canvas.setSize(imageWidth, imageHeight);
-		getContentPane().add("Center", canvas);
+		add(canvas);
 
 		run();
 	}
@@ -120,7 +121,7 @@ public class MainFrame extends JFrame {
 
 //		FileIO debug("debug.txt","wb");
 //		FileIO outFile("output.txt","wb");
-		FileIO inFile= new FileIO("input.txt");
+		FileIO inFile= new FileIO(inputFileName);
 
 		//----------------------------------------------------------------------------------------------
 		// --- read input File -------------------------------------------------------------------------
