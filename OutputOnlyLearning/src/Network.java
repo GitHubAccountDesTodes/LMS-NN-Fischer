@@ -34,6 +34,7 @@ public class Network {
 			neuron[neuronNum] = new Neuron();
 			neuron[neuronNum].setNumWeights(numWeights);
 		}
+		randInitialization();
 	}
 
 	/**
@@ -67,10 +68,10 @@ public class Network {
 	/**
 	 * @brief: Initializes the neurons with random weights
 	 */
-	public void randInitialize() {
-		for (int neuronNum=0; neuronNum<neuron.length; neuronNum++){
-			for (int inputNum=0;inputNum<numInputs;inputNum++){
-				neuron[neuronNum].weight[inputNum] = generateRandomValue(-1,1);
+	public void randInitialization() {
+		for (int hiddenNeuronNum=0;hiddenNeuronNum<numHiddens;hiddenNeuronNum++){
+			for (int i=0;i<hiddenNeuronNum+numInputs;i++){
+				neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1,1);
 			}
 		}
 	}
