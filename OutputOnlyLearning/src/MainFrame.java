@@ -113,21 +113,22 @@ public class MainFrame extends JFrame {
 		
 		for (int hiddenNeuronNum=0;hiddenNeuronNum<numHiddenNeurons;hiddenNeuronNum++){
 			for (int i=0;i<hiddenNeuronNum+numInputNeurons;i++){
-				net.neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1,1); //(rand()%2000)/1000.0-1.0;
+				net.neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1,1);
 			}
 		}
-//		for (int neuronNum=0; neuronNum<numNeurons; neuronNum++){
-//			for (int inputNum=0;inputNum<numInputs;inputNum++){
-//				neuron[neuronNum].weight[inputNum] = generateRandomValue(-1,1);
+		
+//		for(int h=0;h<net.neuron.length;h++) {
+//			System.out.println("\nNeuron: "+h);
+//			for (int i=0;i<net.neuron[h].weight.length;i++) {
+//				System.out.println("i["+i+"]: "+net.neuron[h].weight[i]);
 //			}
 //		}
 	}
 	
-	
 	public void calculateLeastSquaresOptimum() {
 		/**
-		 * Diese Methode berechnet das  least Squares Optimum bisher nur für das Output Neuron.
-		 * Für die Hidden Neuronen wird bisher noch nichts berechnet. ~ Philip
+		 * Diese Methode berechnet das least Squares Optimum bisher nur für das Output Neuron.
+		 * Für die Hidden Neuronen wird noch nichts berechnet.
 		 */
 		
 		double inVector[] = new  double[MDims];

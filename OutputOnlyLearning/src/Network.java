@@ -22,7 +22,7 @@ public class Network {
 	 * @param numNeurons
 	 */
 	public Network(int numInputs, int numNeurons) {
-		this.numWeights = numNeurons + numInputs;
+		this.numWeights = numNeurons + numInputs - 1;
 		this.numInputs  = numInputs;
 		this.numNeurons = numNeurons;
 		
