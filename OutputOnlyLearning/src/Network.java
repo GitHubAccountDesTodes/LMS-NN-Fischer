@@ -11,24 +11,26 @@
 *************************************************************************/
 
 public class Network {
-	public Neuron neuron[];
-	public int numWeights;
+	public Neuron neuron[]; //contains the neurons of numHiddens + numOutputs neurons
+	public int numWeights;	//contains numHiddens + numInputs weights
 	public int numInputs;
-	public int numNeurons; //contains the number of hidden + output neurons
+	public int numHiddens; 
+	public int numOutputs; 
 	
 	/**
 	 * @brief: the Constructor to initialize the neural network
 	 * @param numInputs
 	 * @param numNeurons
 	 */
-	public Network(int numInputs, int numNeurons) {
-		this.numWeights = numNeurons + numInputs - 1;
+	public Network(int numInputs, int numHiddens, int numOutputs) {
+		this.numWeights = numHiddens + numInputs;
 		this.numInputs  = numInputs;
-		this.numNeurons = numNeurons;
+		this.numHiddens = numHiddens;
+		this.numOutputs = numOutputs;
 		
-		neuron = new Neuron[numNeurons];
+		neuron = new Neuron[numHiddens+numOutputs];
 //		System.out.println("Num="+numInputs+","+numNeurons);
-		for (int neuronNum=0;neuronNum<numNeurons;neuronNum++){
+		for (int neuronNum=0;neuronNum<neuron.length;neuronNum++){
 			neuron[neuronNum] = new Neuron();
 			neuron[neuronNum].setNumWeights(numWeights);
 		}
@@ -66,7 +68,7 @@ public class Network {
 	 * @brief: Initializes the neurons with random weights
 	 */
 	public void randInitialize() {
-		for (int neuronNum=0; neuronNum<numNeurons; neuronNum++){
+		for (int neuronNum=0; neuronNum<neuron.length; neuronNum++){
 			for (int inputNum=0;inputNum<numInputs;inputNum++){
 				neuron[neuronNum].weight[inputNum] = generateRandomValue(-1,1);
 			}
@@ -99,7 +101,7 @@ public class Network {
 	public void activate(double inVector[]) {
 		
 		//System.out.println("NeuronNum:"+numNeurons+"numWeights"+numWeights);
-		for (int neuronNum=0; neuronNum<numNeurons; neuronNum++){
+		for (int neuronNum=0; neuronNum<neuron.length; neuronNum++){
 			double sum = 0;
 			for (int weightNum=0;weightNum<numWeights;weightNum++){
 				if (weightNum<numInputs){

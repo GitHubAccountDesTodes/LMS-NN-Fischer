@@ -105,7 +105,7 @@ public class MainFrame extends JFrame {
 	public void initialization() {
 		MDims = numInputNeurons+numHiddenNeurons; // Multi-Domain Information Model (output not included ...)
 		
-		net = new Network(numInputNeurons, numHiddenNeurons + numOutputNeurons);
+		net = new Network(numInputNeurons, numHiddenNeurons, numOutputNeurons);
 
 		// ############################################################################################
 		// ##### random structure #####################################################################
@@ -116,13 +116,6 @@ public class MainFrame extends JFrame {
 				net.neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1,1);
 			}
 		}
-		
-//		for(int h=0;h<net.neuron.length;h++) {
-//			System.out.println("\nNeuron: "+h);
-//			for (int i=0;i<net.neuron[h].weight.length;i++) {
-//				System.out.println("i["+i+"]: "+net.neuron[h].weight[i]);
-//			}
-//		}
 	}
 	
 	public void calculateLeastSquaresOptimum() {
@@ -159,6 +152,13 @@ public class MainFrame extends JFrame {
 			net.neuron[numHiddenNeurons].weight[i] = equ.solution[i];	// weight from Neuron i to output neuron outnum
 		}
 		// --- end output neuron --------------------------------------------------------------------------------
+		
+		for(int h=0;h<net.neuron.length;h++) {
+			System.out.println("\nNeuron: "+h);
+			for (int i=0;i<net.neuron[h].weight.length;i++) {
+				System.out.println("i["+i+"]: "+net.neuron[h].weight[i]);
+			}
+		}
 	}
 
 	/**
