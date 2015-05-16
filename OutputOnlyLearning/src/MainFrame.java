@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 	private int numInputs;
 	private int numHiddens;
 	private int numOutputs;
-	private int MDims;
+	private int MDims; 		// Matrix Dimensions
 
 	public MainFrame(String[] args) {
 		super("Output Only Learning Networks");
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void initialization() {
-		MDims = numInputs+numHiddens; // Multi-Domain Information Model (output not included ...)	
+		MDims = numInputs+numHiddens; // output not included ...
 		net = new Network(numInputs, numHiddens, numOutputs);
 	}
 	
@@ -113,15 +113,14 @@ public class MainFrame extends JFrame {
 		 * Für die Hidden Neuronen wird noch nichts berechnet.
 		 */
 		
-		double inVector[] = new  double[MDims];
-		
 		// --- output neuron ------------------------------------------------------------------------------------
+		double[] inVector;
 		EquationSolver equ;
-		equ = new EquationSolver(numInputs + numHiddens);	
+		equ = new EquationSolver(MDims);
+		
 		for (int row=0; row<inFile.maxRow; row++){
-			for (int i=0;i<MDims;i++){
-				inVector[i]=0;
-			}
+			inVector = new  double[MDims];
+			
 			for (int inputNum=0;inputNum<numInputs;inputNum++){    // First input values
 				inVector[inputNum] = inFile.value[inputNum][row];
 			}

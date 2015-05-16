@@ -15,7 +15,7 @@ public class EquationSolver {
 	public double solution[];
 	public double matrix[][];
 
-	int MDims; //Multi-Domain Information Model
+	int MDims;
 
 	/**
 	 * @brief: Constructor to reserve Memory for the matrix
