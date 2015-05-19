@@ -203,6 +203,7 @@ public class MainFrame extends JFrame {
 				}
 				color = (int)(net.neuron[numHiddens].output * 2 * 127 + 127) % 255;
 
+				//schwarze Linien
 				if (color<0) color=0;
 				if (color>255) color=255;
 				if (border){
