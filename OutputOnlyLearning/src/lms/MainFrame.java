@@ -23,7 +23,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	public static final String inputFileName = "input.txt";
+	public static final String inputFileName = "res/input.txt";
 	public static final int imageWidth = 600;
 	public static final int imageHeight = 600;
 	public int frameWidth = imageWidth + 100;
