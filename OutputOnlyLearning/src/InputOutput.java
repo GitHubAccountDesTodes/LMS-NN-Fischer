@@ -29,6 +29,14 @@ public class InputOutput {
 		graphics.fillRect(x, y, 1, 1);
 	}
 
+	/**
+	 * fillRect(xPos, yPos, width, height, color);
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public synchronized void fillRect(int x, int y, int width, int height,
 			Color color) {
 		if (graphics == null)

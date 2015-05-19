@@ -84,6 +84,9 @@ public class MainFrame extends JFrame {
 		numOutputs = inFile.maxCol - numInputs;
 	}
 	
+	/**
+	 * zeichne Inputs in Vierecken
+	 */
 	public void viewInputFile() {
 		System.out.println("numInputs="+numInputs);
 		System.out.println("numHiddens="+numHiddens);
@@ -94,6 +97,7 @@ public class MainFrame extends JFrame {
 			int x = (int)(inFile.value[1][row]*imageWidth);
 			int y = (int)(inFile.value[2][row]*imageHeight);
 
+			//die Farbe ist von Target abhängig
 			int color=(int)(inFile.value[3][row]*127+100);
 			if (color<0) color=0;
 			if (color>255) color=255;
