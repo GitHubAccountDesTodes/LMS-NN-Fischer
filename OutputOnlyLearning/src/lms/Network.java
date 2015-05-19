@@ -1,11 +1,11 @@
 package lms;
-import java.util.Vector;
+//import java.util.Vector;
 
 /************************************************************************
 * \brief: implementation of a network of neurons and its activation     *    
 *         method                                                        *
 *																		*
-* (c) copyright by Jörn Fischer											*
+* (c) copyright by Jörn Fischer										*
 *                                                                       *																		* 
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
@@ -91,10 +91,10 @@ public class Network {
 		//0.999999999 => 0.99*(1+1)-1 = 0.9999
 	}
 	
-	private double error;
-	private double recentAverageError;
-	private double recentAverageSmoothingFactor;
-	
+//	private double error;
+//	private double recentAverageError;
+//	private double recentAverageSmoothingFactor;
+//	
 //	public void backProp(Vector<Double> targetVals) {
 //		// Calculate overall net error (RMS of output neuron errors)
 //		// RMS = "Root Mean Square Error"

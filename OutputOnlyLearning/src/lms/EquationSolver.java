@@ -1,16 +1,15 @@
 package lms;
 /************************************************************************
 * \brief: class to solve the least squares equations with the Gauss-    *
-*         elimination algorithm
+*         elimination algorithm											*
 *																		*
-* (c) copyright by Jörn Fischer											*
+* (c) copyright by Jörn Fischer										*
 *                                                                       *																		* 
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
 *                                                                       *
 * @file : MainFrame.java                                                *
 *************************************************************************/
-
 public class EquationSolver {
 
 	public double solution[];
@@ -22,7 +21,7 @@ public class EquationSolver {
 	 * @brief: Constructor to reserve Memory for the matrix
 	 * @param dims
 	 */
-	EquationSolver(int dims){
+	public EquationSolver(int dims){
 		solution = new double[dims+1];
 		matrix = new double[dims+1][dims+1];
 		
@@ -31,27 +30,15 @@ public class EquationSolver {
 	}
 
 	/**
-	 * fills the matrix with zeroes
-	 */
-	void resetMatrix()
-	{
-		for (int t=0;t<MDims;t++){
-			for (int i=0;i<MDims+1;i++){
-				matrix[t][i]=0;
-			}
-		}
-	}
-
-	/**
 	 * @brief: solves the equation
 	 */
-	void Solve()
+	public void Solve()
 	{
 	 int i,j,k,max;
 	 double swap;
-
+	
 	 for (i=0;i<MDims;i++){
-
+	
 		 // look for highest value
 		 max=i;
 		 for (j=i+1;j<MDims;j++){
@@ -76,14 +63,14 @@ public class EquationSolver {
 				 }
 			 }
 		 }
-
+	
 	 }
-
+	
 	 for (j=0;j<MDims;j++)
 		 solution[j]=0;
-
+	
 	 for (j=MDims-1;j>=0;j--){
-
+	
 		 // substitute
 		 double sum = 0.0;
 		 for (k=j+1;k<MDims;k++){
@@ -97,7 +84,7 @@ public class EquationSolver {
 			solution[j]=(matrix[j][MDims]-sum)/0.000000000000000000001;
 		 }
 	 }
-
+	
 	}
 
 	/**
@@ -107,13 +94,25 @@ public class EquationSolver {
 	 */
 	public void leastSquaresAdd(double inVector[], double target)
 	{
-
+	
 		for (int t=0;t<MDims;t++){
 			matrix[t][MDims] += 2.0*inVector[t]*target;
 		}
 		for (int t=0;t<MDims;t++){
 			for (int r=0;r<MDims;r++){
 				matrix[t][r] += 2.0*inVector[t]*inVector[r];
+			}
+		}
+	}
+
+	/**
+	 * fills the matrix with zeroes
+	 */
+	private void resetMatrix()
+	{
+		for (int t=0;t<MDims;t++){
+			for (int i=0;i<MDims+1;i++){
+				matrix[t][i]=0;
 			}
 		}
 	}
