@@ -1,16 +1,16 @@
 package lms;
 
 /************************************************************************
- * \brief: Main method reading in the spiral data and learning the       *
- *         mapping using the Least Mean Squares method within a neural   *
+ * \brief: Main method reading in the spiral data and learning the 
+ *         mapping using the Least Mean Squares method within a neural
  *         network.
- *																		*
- * (c) copyright by Jörn Fischer											*
- *                                                                       *																		* 
- * @autor: Prof.Dr.Jörn Fischer											*
- * @email: j.fischer@hs-mannheim.de										*
- *                                                                       *
- * @file : MainFrame.java                                                *
+ *
+ * (c) copyright by Jörn Fischer
+ *
+ * @autor: Prof.Dr.Jörn Fischer
+ * @email: j.fischer@hs-mannheim.de
+ *
+ * @file : MainFrame.java
  *************************************************************************/
 
 import java.awt.Color;

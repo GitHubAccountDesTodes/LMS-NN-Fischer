@@ -13,11 +13,6 @@ public class FileIOP {
 	public FileIOP(String path){
 		this.path = path;
 	}
-
-
-//	public double[][] getValue() {
-//		return value;
-//	}
 	
 	/**
 	 * value of line
