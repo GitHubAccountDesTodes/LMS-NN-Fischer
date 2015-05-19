@@ -6,6 +6,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class FileIOP {
+	
+	private double[][] value;
+	private String path;
+	
+	public FileIOP(String path){
+		this.path = path;
+		try {
+			value = readTable();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * value of line
@@ -14,7 +27,7 @@ public class FileIOP {
 	 * @return 
 	 * @throws IOException
 	 */
-	static public double readSingleValue(String path, int line)
+	public double readSingleValue(int line)
 			throws IOException {
 		FileReader fr;
 		fr = new FileReader(path);
@@ -34,7 +47,7 @@ public class FileIOP {
 	 * @return 
 	 * @throws IOException
 	 */
-	static public double[][] readTable(String path) throws IOException {
+	public double[][] readTable() throws IOException {
 		FileReader fr;
 		fr = new FileReader(path);
 		BufferedReader br = new BufferedReader(fr);
@@ -52,7 +65,7 @@ public class FileIOP {
 		return result.toArray(new double[result.size()][]);
 	}
 
-	private static double[] StringArrayToNumArray(String line) {
+	private double[] StringArrayToNumArray(String line) {
 		String[] str = line.split(",");
 		double[] num = new double[str.length];
 		for (int i = 0; i < str.length; i++) {
@@ -60,4 +73,18 @@ public class FileIOP {
 		}
 		return num;
 	}
+	
+	/**
+	 * test
+	 * @param fileName
+	 * @param buf
+	 */
+    public static void writeFile(String fileName, byte[] buf) {
+    	
+    }
+
+	public double[][] getValue() {
+		return value;
+	}
+
 }

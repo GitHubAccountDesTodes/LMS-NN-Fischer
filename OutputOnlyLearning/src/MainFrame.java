@@ -14,6 +14,7 @@
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -33,7 +34,7 @@ public class MainFrame extends JFrame {
 	ImageObserver			imo					= null;
 	Image					renderTarget		= null;
 
-	private FileIO inFile;
+	private FileIOP inFile;
 	private Network net;
 	private int numInputs;
 	private int numHiddens;
@@ -75,13 +76,18 @@ public class MainFrame extends JFrame {
 	public void readInputFile() {
 //		FileIO debug("debug.txt","wb");
 //		FileIO outFile("output.txt","wb");
-		inFile= new FileIO(inputFileName);
+		inFile= new FileIOP(inputFileName);//inputFileName
 
-		numInputs = (int) inFile.readSingleValue();		// first line defines number of input neurons
-		numHiddens = (int) inFile.readSingleValue();
+		try {
+			numInputs = (int) inFile.readSingleValue(1);		// first line defines number of input neurons
+			numHiddens = (int) inFile.readSingleValue(2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		inFile.readTable(inputTableCols,inputTableRows); // 30 values in up to 1000 lines
-		numOutputs = inFile.maxCol - numInputs;
+//		inFile.readTable(); // 30 values in up to 1000 lines
+		numOutputs = inFile.getValue()[0].length - numInputs;
 	}
 	
 	/**
@@ -93,12 +99,12 @@ public class MainFrame extends JFrame {
 		System.out.println("numOutputs="+numOutputs);
 
 		// draw data to learn
-		for (int row=0;row<inFile.maxRow-1;row++) {
-			int x = (int)(inFile.value[1][row]*imageWidth);
-			int y = (int)(inFile.value[2][row]*imageHeight);
-
+		for (int row=0;row<inFile.getValue().length-1;row++) {
+			int x = (int)(inFile.getValue()[row][1]*imageWidth);
+			int y = (int)(inFile.getValue()[row][2]*imageHeight);
+ 
 			//die Farbe ist von Target abhängig
-			int color=(int)(inFile.value[3][row]*127+100);
+			int color=(int)(inFile.getValue()[row][3]*127+100);
 			if (color<0) color=0;
 			if (color>255) color=255;
 			
@@ -125,17 +131,17 @@ public class MainFrame extends JFrame {
 		
 		equ = new EquationSolver(MDims);
 		
-		for (int row=0; row<inFile.maxRow; row++){
+		for (int row=0; row<inFile.getValue().length; row++){
 			inVector = new  double[MDims];
 			
 			for (int inputNum=0;inputNum<numInputs;inputNum++){    // First input values
-				inVector[inputNum] = inFile.value[inputNum][row];
+				inVector[inputNum] = inFile.getValue()[row][inputNum];
 			}
 			net.activate(inVector);
 			for (int hiddenNum=0;hiddenNum<numHiddens; hiddenNum++){
 				inVector[numInputs+hiddenNum] = net.neuron[hiddenNum].output;
 			}
-			targetForOutput      = inFile.value[numInputs][row];
+			targetForOutput      = inFile.getValue()[row][numInputs];
 			activityError        = net.invThreshFunction(targetForOutput);
 			equ.leastSquaresAdd(inVector, activityError);
 		}
@@ -185,7 +191,7 @@ public class MainFrame extends JFrame {
 	 * @param net
 	 * @param inFile
 	 */
-	public void drawMap(int numHiddens, Network net,FileIO inFile) {
+	public void drawMap(int numHiddens, Network net,FileIOP inFile) {
 		double inVector[] = new double[4];
 		// Draw classification map	
 		for (int y=0;y<imageHeight;y+=1){
@@ -215,11 +221,11 @@ public class MainFrame extends JFrame {
 		}
 		
 		// draw spiral data
-		for (int row=0;row<inFile.maxRow-1;row++){
-			int x = (int)(inFile.value[1][row]*imageWidth);
-			int y = (int)(inFile.value[2][row]*imageHeight);
+		for (int row=0;row<inFile.getValue().length-1;row++){
+			int x = (int)(inFile.getValue()[row][1]*imageWidth);
+			int y = (int)(inFile.getValue()[row][2]*imageHeight);
 
-			int color=(int)(inFile.value[3][row]*127+100);
+			int color=(int)(inFile.getValue()[row][3]*127+100);
 			if (color<0) color=0;
 			if (color>255) color=255;
 			
