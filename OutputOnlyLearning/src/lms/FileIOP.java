@@ -1,3 +1,4 @@
+package lms;
 
 
 import java.io.BufferedReader;
@@ -7,19 +8,17 @@ import java.util.ArrayList;
 
 public class FileIOP {
 	
-	private double[][] value;
 	private String path;
 	
 	public FileIOP(String path){
 		this.path = path;
-		try {
-			value = readTable();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
+
+//	public double[][] getValue() {
+//		return value;
+//	}
+	
 	/**
 	 * value of line
 	 * @param path
@@ -27,7 +26,7 @@ public class FileIOP {
 	 * @return 
 	 * @throws IOException
 	 */
-	public double readSingleValue(int line)
+	public int readSingleValue(int line)
 			throws IOException {
 		FileReader fr;
 		fr = new FileReader(path);
@@ -38,7 +37,7 @@ public class FileIOP {
 		String result = br.readLine();
 		br.close();
 		fr.close();
-		return Double.parseDouble(result); // no test, if result is a number
+		return Integer.parseInt(result); // no test, if result is a number
 	}
 
 	/**
@@ -72,19 +71,6 @@ public class FileIOP {
 			num[i] = Double.parseDouble(str[i]);
 		}
 		return num;
-	}
-	
-	/**
-	 * test
-	 * @param fileName
-	 * @param buf
-	 */
-    public static void writeFile(String fileName, byte[] buf) {
-    	
-    }
-
-	public double[][] getValue() {
-		return value;
 	}
 
 }

@@ -1,3 +1,4 @@
+package lms;
 /************************************************************************
 * \brief: class to solve the least squares equations with the Gauss-    *
 *         elimination algorithm
