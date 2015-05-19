@@ -1,4 +1,4 @@
-import java.util.Vector;
+package main.java;
 
 /************************************************************************
 * \brief: implementation of a network of neurons and its activation     *    
@@ -9,7 +9,7 @@ import java.util.Vector;
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
 *                                                                       *
-* @file : Network.java                                                  *
+* @file : main.java.Network.java                                                  *
 *************************************************************************/
 
 public class Network {
@@ -97,7 +97,7 @@ public class Network {
 //	public void backProp(Vector<Double> targetVals) {
 //		// Calculate overall net error (RMS of output neuron errors)
 //		// RMS = "Root Mean Square Error"
-//		Vector<Neuron> outputLayer = layers.lastElement();
+//		Vector<main.java.Neuron> outputLayer = layers.lastElement();
 //		error = 0.0;
 //
 //		for (int neuronNum = 0; neuronNum < outputLayer.size() - 1; neuronNum++) {
@@ -122,8 +122,8 @@ public class Network {
 //		// Calculate gradients on hidden layers
 //
 ////		for (int layerNum = layers.size() - 2; layerNum > 0; layerNum--) {
-////			Vector<Neuron> hiddenLayer = layers.get(layerNum);
-////			Vector<Neuron> nextLayer = layers.get(layerNum + 1);
+////			Vector<main.java.Neuron> hiddenLayer = layers.get(layerNum);
+////			Vector<main.java.Neuron> nextLayer = layers.get(layerNum + 1);
 ////
 ////			for (int neuronNum = 0; neuronNum < hiddenLayer.size(); neuronNum++) {
 ////				hiddenLayer.get(neuronNum).calcHiddenGradients(nextLayer);
@@ -134,8 +134,8 @@ public class Network {
 //		// update connection weights
 //
 //		for (int layerNum = layers.size() - 1; layerNum > 0; layerNum--) {
-//			Vector<Neuron> layer = layers.get(layerNum);
-//			Vector<Neuron> prevLayer = layers.get(layerNum - 1);
+//			Vector<main.java.Neuron> layer = layers.get(layerNum);
+//			Vector<main.java.Neuron> prevLayer = layers.get(layerNum - 1);
 //
 //			for (int neuronNum = 0; neuronNum < layer.size() - 1; neuronNum++) {
 //				layer.get(neuronNum).updateInputWeights(prevLayer);

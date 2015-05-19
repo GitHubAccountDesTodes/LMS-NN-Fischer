@@ -1,14 +1,16 @@
+package main.java;
+
 import java.util.Vector;
 
 /************************************************************************
-* \brief: a single Neuron class                                         *
+* \brief: a single main.java.Neuron class                                         *
 *																		*
 * (c) copyright by Jörn Fischer											*
 *                                                                       *																		* 
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
 *                                                                       *
-* @file : Neuron.java                                                   *
+* @file : main.java.Neuron.java                                                   *
 *************************************************************************/
 
 public class Neuron {
@@ -47,12 +49,12 @@ public class Neuron {
 //		//System.out.println("gradient: "+gradient);
 //	}
 //
-//	public void calcHiddenGradients(Vector<Neuron> nextLayer) {
+//	public void calcHiddenGradients(Vector<main.java.Neuron> nextLayer) {
 //		double dow = sumDOW(nextLayer);
 //		gradient = dow * transferFunctionDerivative(output);
 //	}
 //	
-//	private double sumDOW(Vector<Neuron> nextLayer) {
+//	private double sumDOW(Vector<main.java.Neuron> nextLayer) {
 //		double sum = 0.0;
 //
 //		// Sum our contributions of the errors at the nodes we need

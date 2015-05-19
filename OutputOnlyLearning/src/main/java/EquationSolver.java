@@ -1,3 +1,5 @@
+package main.java;
+
 /************************************************************************
 * \brief: class to solve the least squares equations with the Gauss-    *
 *         elimination algorithm
@@ -7,7 +9,7 @@
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
 *                                                                       *
-* @file : MainFrame.java                                                *
+* @file : main.java.MainFrame.java                                                *
 *************************************************************************/
 
 public class EquationSolver {

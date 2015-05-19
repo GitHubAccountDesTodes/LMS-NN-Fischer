@@ -1,4 +1,4 @@
-/************************************************************************
+package main.java; /************************************************************************
 * \brief: Class for File-IO, reads in single values and the table       *
 *         for the spiral problem                                        *
 *																		*
@@ -7,7 +7,7 @@
 * @autor: Prof.Dr.Jörn Fischer											*
 * @email: j.fischer@hs-mannheim.de										*
 *                                                                       *
-* @file : MainFrame.java                                                *
+* @file : main.java.MainFrame.java                                                *
 *************************************************************************/
 
 import java.io.*;
@@ -29,7 +29,7 @@ public class FileIO {
 	 * @param filename is the name of the file
 	 */
 	public FileIO(String filename) {
-		file = new File(filename);
+		file = new File(System.getProperty("user.dir") + "\\OutputOnlyLearning\\src\\main\\resources\\" + filename);
 		fPointer=0;
 		try {
 			readFile();
