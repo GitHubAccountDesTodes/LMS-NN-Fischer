@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
 
 	private Network net;
 	private double[][] inputTable;
+	private double bias;
 	private int numInputs;
 	private int numHiddens;
 	private int numOutputs;
@@ -86,6 +87,7 @@ public class MainFrame extends JFrame {
 			e.printStackTrace();
 		}
 		numOutputs = inputTable[0].length - numInputs;
+		bias = inputTable[0][0];
 	}
 
 	/**
@@ -209,7 +211,7 @@ public class MainFrame extends JFrame {
 		for (int y = 0; y < imageHeight; y += 1) {
 			for (int x = 0; x < imageWidth; x += 1) {
 				int color;
-				inVector[0] = 1.0;
+				inVector[0] = bias;
 				inVector[1] = x / (double) imageWidth;
 				inVector[2] = y / (double) imageHeight;
 				net.activate(inVector);

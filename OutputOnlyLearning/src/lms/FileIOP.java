@@ -38,7 +38,7 @@ public class FileIOP {
 	/**
 	 * learn data of table inclusive targets
 	 * @param path
-	 * @return 
+	 * @return table[row][coloumn]
 	 * @throws IOException
 	 */
 	public double[][] readTable() throws IOException {
