@@ -74,7 +74,7 @@ public class Network {
      * @brief: Initializes the neurons with random weights
      */
 	public void randInitialization() {
-		// initialisiere Gewichte für Hidden Neuron ohne Rückkopplung
+		// initialisiere Gewichte fuer Hidden Neuron ohne Rueckkopplung
 		for (int hiddenNeuronNum = 0; hiddenNeuronNum < numHiddens; hiddenNeuronNum++) {
 			for (int i = 0; i < numInputs; i++) {
 				neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1, 1);
@@ -88,9 +88,9 @@ public class Network {
 			System.out.println();
 		}
 		
-		// initialisiere Gewichte für Output Neuron
+		// initialisiere Gewichte fuer Output Neuron
 		for (int outputNum = numHiddens; outputNum < neuron.length; outputNum++) {
-			for (int weightNum = numInputs - 1; weightNum < numWeights; weightNum++) {
+			for (int weightNum = numInputs; weightNum < numWeights; weightNum++) {
 				neuron[outputNum].weight[weightNum] = generateRandomValue(-1, 1);
 			}
 			// Ausgabe zum Kontrollieren
