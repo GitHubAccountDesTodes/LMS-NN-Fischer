@@ -21,8 +21,8 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	private static final String inputFileName = "res/input_big.txt";
-//	private static final String inputFileName = "res/input.txt";
+//	private static final String inputFileName = "res/input_big2.txt";
+	private static final String inputFileName = "res/input.txt";
 	private static final int imageWidth = 600;
 	private static final int imageHeight = 600;
 	private static final int border = 100;
@@ -160,6 +160,8 @@ public class MainFrame extends JFrame {
 
 		equ.Solve();
 
+		//gebe Ergebnis in die Konsole aus
+		System.out.println("Solution:");
 		for (int i = 0; i < numInputs + numHiddens; i++) {
 			net.neuron[numHiddens].weight[i] = equ.solution[i]; // weight from
 			System.out.println("weight[" + i + "]: "
@@ -217,27 +219,27 @@ public class MainFrame extends JFrame {
 				inVector[1] = x / (double) imageWidth;
 				inVector[2] = y / (double) imageHeight;
 				net.activate(inVector);
-				boolean border = false;
-				for (int t = 0; t < numHiddens; t++) {
-					if (net.neuron[t].output > -0.002
-							&& net.neuron[t].output < 0.002) {
-						border = true;
-						break;
-					}
-				}
-				color = (int) (net.neuron[numHiddens].output * 2 * 127+127) % 255;
+//				boolean border = false;
+//				for (int t = 0; t < numHiddens; t++) {
+//					if (net.neuron[t].output > -0.002
+//							&& net.neuron[t].output < 0.002) {
+//						border = true;
+//						break;
+//					}
+//				}
+				color = (int) (net.neuron[numHiddens].output * 2.0 * 127) % 255;
 
 				if (color < 0)
 					color = 0;
 				if (color > 255)
 					color = 255;
-				if (border) {
-					// schwarze Linien
-					inputOutput.drawPixel(x, y, new Color(0, 0, 0));
+				inputOutput.drawPixel(x, y, new Color(color, 0, 255));
+//				if (border) {
+//					// schwarze Linien
+//					inputOutput.drawPixel(x, y, new Color(0, 0, 0));
+//				} else {
 //					inputOutput.drawPixel(x, y, new Color(color, 0, 255));
-				} else {
-					inputOutput.drawPixel(x, y, new Color(color, 0, 255));
-				}
+//				}
 			}
 		}
 

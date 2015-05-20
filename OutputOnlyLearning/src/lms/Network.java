@@ -24,20 +24,19 @@ public class Network {
      * @param numInputs
      * @param numNeurons
      */
-    public Network(int numInputs, int numHiddens, int numOutputs) {
-	this.numWeights = numHiddens + numInputs;
-	this.numInputs = numInputs;
-	this.numHiddens = numHiddens;
-	this.numOutputs = numOutputs;
+	public Network(int numInputs, int numHiddens, int numOutputs) {
+		this.numWeights = numHiddens + numInputs;
+		this.numInputs = numInputs;
+		this.numHiddens = numHiddens;
+		this.numOutputs = numOutputs;
 
-	neuron = new Neuron[numHiddens + numOutputs];
-	// System.out.println("Num="+numInputs+","+numNeurons);
-	for (int neuronNum = 0; neuronNum < neuron.length; neuronNum++) {
-	    neuron[neuronNum] = new Neuron();
-	    neuron[neuronNum].setNumWeights(numWeights);
+		neuron = new Neuron[numHiddens + numOutputs];
+		for (int neuronNum = 0; neuronNum < neuron.length; neuronNum++) {
+			neuron[neuronNum] = new Neuron();
+			neuron[neuronNum].setNumWeights(numWeights);
+		}
+		randInitialization();
 	}
-	randInitialization();
-    }
 
     /**
      * @brief: The Threshold function, the neurons implement
@@ -74,18 +73,35 @@ public class Network {
     /**
      * @brief: Initializes the neurons with random weights
      */
-    public void randInitialization() {
-	for (int hiddenNeuronNum = 0; hiddenNeuronNum < numHiddens; hiddenNeuronNum++) {
-	    for (int i = 0; i < hiddenNeuronNum + numInputs; i++) {
-		neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1, 1);
-	    }
-	    for (int i = 0; i < neuron[hiddenNeuronNum].weight.length; i++) {
-		System.out.println("weight[" + i + "]: "
-			+ neuron[hiddenNeuronNum].weight[i]);
-	    }
-	    System.out.println();
+	public void randInitialization() {
+		// initialisiere Gewichte für Hidden Neuron ohne Rückkopplung
+		for (int hiddenNeuronNum = 0; hiddenNeuronNum < numHiddens; hiddenNeuronNum++) {
+			for (int i = 0; i < numInputs; i++) {
+				neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1, 1);
+			}
+			// Ausgabe zum Kontrollieren
+			System.out.println("Hidden Neuron: " + hiddenNeuronNum);
+			for (int i = 0; i < numWeights; i++) {
+				System.out.println("weight[" + i + "]: "
+						+ neuron[hiddenNeuronNum].weight[i]);
+			}
+			System.out.println();
+		}
+		
+		// initialisiere Gewichte für Output Neuron
+		for (int outputNum = numHiddens; outputNum < neuron.length; outputNum++) {
+			for (int weightNum = numInputs - 1; weightNum < numWeights; weightNum++) {
+				neuron[outputNum].weight[weightNum] = generateRandomValue(-1, 1);
+			}
+			// Ausgabe zum Kontrollieren
+			System.out.println("Output Neuron: " + outputNum);
+			for (int i = 0; i < numWeights; i++) {
+				System.out.println("weight[" + i + "]: "
+						+ neuron[outputNum].weight[i]);
+			}
+			System.out.println();
+		}
 	}
-    }
 
     public double generateRandomValue(double von, double bis) {
 	return Math.random() * (bis - von) + von;
@@ -94,62 +110,6 @@ public class Network {
 	// 0.50 => 0.50*(1+1)-1 = 0
 	// 0.999999999 => 0.99*(1+1)-1 = 0.9999
     }
-
-    // private double error;
-    // private double recentAverageError;
-    // private double recentAverageSmoothingFactor;
-    //
-    // public void backProp(Vector<Double> targetVals) {
-    // // Calculate overall net error (RMS of output neuron errors)
-    // // RMS = "Root Mean Square Error"
-    // Vector<Neuron> outputLayer = layers.lastElement();
-    // error = 0.0;
-    //
-    // for (int neuronNum = 0; neuronNum < outputLayer.size() - 1; neuronNum++)
-    // {
-    // double delta = targetVals.get(neuronNum)
-    // - outputLayer.get(neuronNum).getOutputVal();
-    // error += delta * delta;
-    // }
-    // error /= (outputLayer.size() - 1); // Get average error squared
-    // error = Math.sqrt(error); // RMS
-    //
-    // // Implement a recent average
-    //
-    // recentAverageError = (recentAverageError * recentAverageSmoothingFactor +
-    // error)
-    // / (recentAverageSmoothingFactor + 1.0);
-    // // Calculate output layer gradients
-    //
-    // // for (int neuronNum = 0; neuronNum < outputLayer.size() - 1;
-    // neuronNum++) {
-    // // outputLayer.get(neuronNum).calcOutputGradients(
-    // // targetVals.get(neuronNum));
-    // // }
-    //
-    // // Calculate gradients on hidden layers
-    //
-    // // for (int layerNum = layers.size() - 2; layerNum > 0; layerNum--) {
-    // // Vector<Neuron> hiddenLayer = layers.get(layerNum);
-    // // Vector<Neuron> nextLayer = layers.get(layerNum + 1);
-    // //
-    // // for (int neuronNum = 0; neuronNum < hiddenLayer.size(); neuronNum++) {
-    // // hiddenLayer.get(neuronNum).calcHiddenGradients(nextLayer);
-    // // }
-    // // }
-    //
-    // // For all layers from outputs to first hidden layer
-    // // update connection weights
-    //
-    // for (int layerNum = layers.size() - 1; layerNum > 0; layerNum--) {
-    // Vector<Neuron> layer = layers.get(layerNum);
-    // Vector<Neuron> prevLayer = layers.get(layerNum - 1);
-    //
-    // for (int neuronNum = 0; neuronNum < layer.size() - 1; neuronNum++) {
-    // layer.get(neuronNum).updateInputWeights(prevLayer);
-    // }
-    // }
-    // }
 
     /**
      * @brief: setter function to set the neural weights
@@ -167,7 +127,6 @@ public class Network {
      */
     public void activate(double inVector[]) {
 
-	// System.out.println("NeuronNum:"+numNeurons+"numWeights"+numWeights);
 	// hidden layer
 	for (int neuronNum = 0; neuronNum < neuron.length; neuronNum++) {
 	    double sum = 0;
@@ -200,5 +159,66 @@ public class Network {
 
 	neuron[numHiddens].output = threshFunction(sum);
     }
+
+    /**
+     * nicht benutzt
+     */
+	public void backProp(){
+		// private double error;
+		// private double recentAverageError;
+		// private double recentAverageSmoothingFactor;
+		//
+		// public void backProp(Vector<Double> targetVals) {
+		// // Calculate overall net error (RMS of output neuron errors)
+		// // RMS = "Root Mean Square Error"
+		// Vector<Neuron> outputLayer = layers.lastElement();
+		// error = 0.0;
+		//
+		// for (int neuronNum = 0; neuronNum < outputLayer.size() - 1; neuronNum++)
+		// {
+		// double delta = targetVals.get(neuronNum)
+		// - outputLayer.get(neuronNum).getOutputVal();
+		// error += delta * delta;
+		// }
+		// error /= (outputLayer.size() - 1); // Get average error squared
+		// error = Math.sqrt(error); // RMS
+		//
+		// // Implement a recent average
+		//
+		// recentAverageError = (recentAverageError * recentAverageSmoothingFactor +
+		// error)
+		// / (recentAverageSmoothingFactor + 1.0);
+		// // Calculate output layer gradients
+		//
+		// // for (int neuronNum = 0; neuronNum < outputLayer.size() - 1;
+		// neuronNum++) {
+		// // outputLayer.get(neuronNum).calcOutputGradients(
+		// // targetVals.get(neuronNum));
+		// // }
+		//
+		// // Calculate gradients on hidden layers
+		//
+		// // for (int layerNum = layers.size() - 2; layerNum > 0; layerNum--) {
+		// // Vector<Neuron> hiddenLayer = layers.get(layerNum);
+		// // Vector<Neuron> nextLayer = layers.get(layerNum + 1);
+		// //
+		// // for (int neuronNum = 0; neuronNum < hiddenLayer.size(); neuronNum++) {
+		// // hiddenLayer.get(neuronNum).calcHiddenGradients(nextLayer);
+		// // }
+		// // }
+		//
+		// // For all layers from outputs to first hidden layer
+		// // update connection weights
+		//
+		// for (int layerNum = layers.size() - 1; layerNum > 0; layerNum--) {
+		// Vector<Neuron> layer = layers.get(layerNum);
+		// Vector<Neuron> prevLayer = layers.get(layerNum - 1);
+		//
+		// for (int neuronNum = 0; neuronNum < layer.size() - 1; neuronNum++) {
+		// layer.get(neuronNum).updateInputWeights(prevLayer);
+		// }
+		// }
+		// }    	
+	}
 
 }
