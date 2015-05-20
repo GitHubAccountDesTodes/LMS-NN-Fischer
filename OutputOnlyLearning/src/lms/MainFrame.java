@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
     }
 
     public void initialization() {
-	MDims = numInputs + numHiddens; // output not included ...
+	MDims = numHiddens; // output not included ...
 	net = new Network(numInputs, numHiddens, numOutputs);
     }
 
@@ -140,7 +140,7 @@ public class MainFrame extends JFrame {
 	equ = new EquationSolver(MDims);
 
 	for (int row = 0; row < inputTable.length; row++) {
-	    inVector = new double[MDims];
+	    inVector = new double[numInputs];
 
 	    for (int inputNum = 0; inputNum < numInputs; inputNum++) { // First
 		// input
@@ -148,8 +148,10 @@ public class MainFrame extends JFrame {
 		inVector[inputNum] = inputTable[row][inputNum];
 	    }
 	    net.activate(inVector);
+	    
+	    inVector = new double[MDims];
 	    for (int hiddenNum = 0; hiddenNum < numHiddens; hiddenNum++) {
-		inVector[numInputs + hiddenNum] = net.neuron[hiddenNum].output;
+		inVector[hiddenNum] = net.neuron[hiddenNum].output;
 	    }
 	    targetForOutput = inputTable[row][numInputs];
 	    activityError = net.invThreshFunction(targetForOutput);
@@ -161,10 +163,10 @@ public class MainFrame extends JFrame {
 	// Gebe Ergebnis in der Konsole aus
 
 	System.out.println("Solution:");
-	for (int i = 0; i < numInputs + numHiddens; i++) {
-	    net.neuron[numHiddens].weight[i] = equ.solution[i]; // weight from
-	    System.out.println("weight[" + i + "]: "
-		    + net.neuron[numHiddens].weight[i]);
+	for (int weightNum = 0; weightNum < MDims; weightNum++) {
+	    net.neuron[numHiddens].weight[numInputs+weightNum] = equ.solution[weightNum]; // weight from
+	    System.out.println("weight[" + weightNum + "]: "
+		    + net.neuron[numHiddens].weight[weightNum]);
 	}
 
 	// --- end output neuron ---
@@ -315,27 +317,26 @@ public class MainFrame extends JFrame {
 		inVector[1] = x / (double) imageWidth;
 		inVector[2] = y / (double) imageHeight;
 		net.activate(inVector);
-		// boolean border = false;
-		// for (int t = 0; t < numHiddens; t++) {
-		// if (net.neuron[t].output > -0.002
-		// && net.neuron[t].output < 0.002) {
-		// border = true;
-		// break;
-		// }
-		// }
+		boolean border = false;
+		for (int t = 0; t < numHiddens; t++) {
+		    if (net.neuron[t].output > -0.002 && net.neuron[t].output < 0.002) {
+			border = true;
+			break;
+		    }
+		}
 		color = (int) (net.neuron[numHiddens].output * 2.0 * 127) % 255;
 
 		if (color < 0)
 		    color = 0;
 		if (color > 255)
 		    color = 255;
-		inputOutput.drawPixel(x, y, new Color(color, 0, 255));
-		// if (border) {
-		// // schwarze Linien
-		// inputOutput.drawPixel(x, y, new Color(0, 0, 0));
-		// } else {
-		// inputOutput.drawPixel(x, y, new Color(color, 0, 255));
-		// }
+		
+		if (border) {
+		 // schwarze Linien
+		 inputOutput.drawPixel(x, y, new Color(0, 0, 0));
+		 } else {
+		 inputOutput.drawPixel(x, y, new Color(color, 0, 255));
+		 }
 	    }
 	}
 
