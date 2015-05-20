@@ -9,26 +9,19 @@ package lms;
  *************************************************************************/
 
 public class Neuron {
-    public double gradient;
     public double output;
-    public double activity;
     public double weight[];
-    public int numWeights;
-
-    /**
-     * @brief: Constructor to reserve memory
-     */
-    public Neuron() {
-
-    }
+//    public double gradient;
+//    public double activity;
+//    public int numWeights;
 
     /**
      * @brief: setter function to set the number of weights
      * @param numOfWeights
      */
     public void setNumWeights(int numWeights) {
-	this.numWeights = numWeights;
-	weight = new double[numWeights];
+//		this.numWeights = numWeights;
+		weight = new double[numWeights];
     }
 
     // static private double transferFunctionDerivative(double x) {

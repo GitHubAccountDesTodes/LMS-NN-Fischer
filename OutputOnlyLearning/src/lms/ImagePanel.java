@@ -19,8 +19,8 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ImagePanel extends JPanel {
 
-	public Image			img				= null;
-	public ImageObserver	imageObserver	= null;
+	public Image img;
+	public ImageObserver imageObserver	;
 
 	public void paint(Graphics g) {
 		super.paint(g);
