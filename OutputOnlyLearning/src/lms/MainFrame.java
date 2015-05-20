@@ -161,13 +161,25 @@ public class MainFrame extends JFrame {
 	equ.Solve();
 
 	// Gebe Ergebnis in der Konsole aus
-
+	
 	System.out.println("Solution:");
 	for (int weightNum = 0; weightNum < MDims; weightNum++) {
-	    net.neuron[numHiddens].weight[numInputs+weightNum] = equ.solution[weightNum]; // weight from
+	    net.neuron[numHiddens].weight[numInputs+weightNum] = equ.solution[weightNum]; // weight from 
+	}
+	
+	for (int weightNum = 0; weightNum < net.numWeights; weightNum++) {
 	    System.out.println("weight[" + weightNum + "]: "
 		    + net.neuron[numHiddens].weight[weightNum]);
 	}
+//	System.out.println("weight[" + weightNum + "]: "
+//		    + net.neuron[numHiddens].weight[weightNum]);
+//	weightNum++;
+//	System.out.println("weight[" + weightNum + "]: "
+//		    + net.neuron[numHiddens].weight[weightNum]);
+//	weightNum++;
+//	System.out.println("weight[" + weightNum + "]: "
+//		    + net.neuron[numHiddens].weight[weightNum]);
+	
 
 	// --- end output neuron ---
 
