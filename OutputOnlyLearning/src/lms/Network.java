@@ -148,8 +148,8 @@ public class Network {
 	double sum = 0;
 	for (int weightNum = 0; weightNum < numWeights; weightNum++) {
 	    if (weightNum < numInputs) {
-		sum += neuron[numHiddens].weight[weightNum]
-			* inVector[weightNum];
+//		sum += neuron[numHiddens].weight[weightNum]
+//			* inVector[weightNum];
 	    }
 	    if (weightNum >= numInputs) {
 		sum += neuron[numHiddens].weight[weightNum]
