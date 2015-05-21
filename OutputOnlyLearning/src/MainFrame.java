@@ -19,7 +19,7 @@ import java.io.IOException;
 public class MainFrame extends JFrame {
 
 	// private static final String inputFileName = "resources/input_big2.txt";
-	private static final String inputFileName = "input.txt";
+	private static final String inputFileName = "input_big.txt";
 	private static final int imageWidth = 600;
 	private static final int imageHeight = 600;
 	private static final int border = 100;
