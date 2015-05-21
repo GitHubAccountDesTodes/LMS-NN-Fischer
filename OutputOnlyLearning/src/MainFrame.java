@@ -11,236 +11,238 @@
 * @file : MainFrame.java                                                *
 *************************************************************************/
 
-import java.awt.Color;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.ImageObserver;
-
-import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	public static final String inputFileName 	= "input.txt";
-	public static final int inputTableCols		= 30;
-	public static final int inputTableRows  	= 100;
-	public static final int	imageWidth			= 600;
-	public static final int	imageHeight			= 600;
-	public int 				frameWidth			= imageWidth + 100;
-	public int 				frameHeight			= imageHeight + 100;
-	public InputOutput		inputOutput			= new InputOutput(this);
-	public boolean			stop				= false;
-	ImagePanel				canvas				= new ImagePanel();
-	ImageObserver			imo					= null;
-	Image					renderTarget		= null;
-
-	private FileIO inFile;
-	private Network net;
-	private int numInputs;
-	private int numHiddens;
-	private int numOutputs;
-	private int MDims; 		// Matrix Dimensions
+	public static final int	imageWidth		= 600;
+	public static final int	imageHeight		= 600;
+	public InputOutput		inputOutput		= new InputOutput(this);
+	public boolean			stop			= false;
+	ImagePanel				canvas			= new ImagePanel();
+	ImageObserver			imo				= null;
+	Image					renderTarget	= null;
 
 	public MainFrame(String[] args) {
 		super("Output Only Learning Networks");
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setLocation(getX()-frameWidth/2,getY()-frameHeight/2);
+
+		getContentPane().setSize(imageWidth, imageHeight);
+		setSize(imageWidth + 100, imageHeight + 100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-		setLayout(null);
-		int horizontalInsets = getInsets().right;
-		int verticalInsets = getInsets().top+getInsets().bottom;
-		setSize(frameWidth+horizontalInsets,frameHeight+verticalInsets);
-		
+
 		canvas.img = createImage(imageWidth, imageHeight);
-		canvas.setLocation((frameWidth-getInsets().left-imageWidth)/2, (frameHeight-imageHeight)/2);
-		canvas.setSize(imageWidth, imageHeight);
+
 		add(canvas);
 
 		run();
 	}
-	
-	/**
-	 * @brief: run method calls my Main and puts the results on the screen
-	 */
-	public void run() {
-		readInputFile();
-		viewInputFile();
-		initialization();
-		calculateLeastSquaresOptimum();
-		drawMap(numHiddens, net, inFile);
-		repaint();
-	}
 
-	public void readInputFile() {
-//		FileIO debug("debug.txt","wb");
-//		FileIO outFile("output.txt","wb");
-		inFile= new FileIO(inputFileName);
-
-		numInputs = (int) inFile.readSingleValue();		// first line defines number of input neurons
-		numHiddens = (int) inFile.readSingleValue();
-		
-		inFile.readTable(inputTableCols,inputTableRows); // 30 values in up to 1000 lines
-		numOutputs = inFile.maxCol - numInputs;
-	}
-	
-	/**
-	 * zeichne Inputs in Vierecken
-	 */
-	public void viewInputFile() {
-		System.out.println("numInputs="+numInputs);
-		System.out.println("numHiddens="+numHiddens);
-		System.out.println("numOutputs="+numOutputs);
-
-		// draw data to learn
-		for (int row=0;row<inFile.maxRow-1;row++) {
-			int x = (int)(inFile.value[1][row]*imageWidth);
-			int y = (int)(inFile.value[2][row]*imageHeight);
-
-			//die Farbe ist von Target abhängig
-			int color=(int)(inFile.value[3][row]*127+100);
-			if (color<0) color=0;
-			if (color>255) color=255;
-			
-			inputOutput.fillRect(x, y, 2, 2, new Color(color,255,100));
-		}
-	}
-	
-	public void initialization() {
-		MDims = numInputs+numHiddens; // output not included ...
-		net = new Network(numInputs, numHiddens, numOutputs);
-	}
-	
-	public void calculateLeastSquaresOptimum() {
-		/**
-		 * Diese Methode berechnet das least Squares Optimum bisher nur für das Output Neuron.
-		 * Für die Hidden Neuronen wird noch nichts berechnet.
-		 */
-		
-		// --- output neuron ------------------------------------------------------------------------------------
-		double[] inVector;
-		double targetForOutput; 
-		double activityError;
-		EquationSolver equ;
-		
-		equ = new EquationSolver(MDims);
-		
-		for (int row=0; row<inFile.maxRow; row++){
-			inVector = new  double[MDims];
-			
-			for (int inputNum=0;inputNum<numInputs;inputNum++){    // First input values
-				inVector[inputNum] = inFile.value[inputNum][row];
-			}
-			net.activate(inVector);
-			for (int hiddenNum=0;hiddenNum<numHiddens; hiddenNum++){
-				inVector[numInputs+hiddenNum] = net.neuron[hiddenNum].output;
-			}
-			targetForOutput      = inFile.value[numInputs][row];
-			activityError        = net.invThreshFunction(targetForOutput);
-			equ.leastSquaresAdd(inVector, activityError);
-		}
-
-		equ.Solve();
-
-		for (int i=0;i<numInputs+numHiddens;i++){
-			//double debugg = equ->solution[i];
-			net.neuron[numHiddens].weight[i] = equ.solution[i];	// weight from Neuron i to output neuron outnum
-			System.out.println("weight["+i+"]: "+net.neuron[numHiddens].weight[i]);
-		}
-		
-		// --- end output neuron --------------------------------------------------------------------------------
-		
-		// --- hidden neuron ------------------------------------------------------------------------------------
-//		for (int h=0;h<numHiddens;h++) {
-//			equ = new EquationSolver(MDims-h-1);
-//			
-//			for (int row=0; row<inFile.maxRow; row++){
-//				inVector = new  double[MDims-h-1];
-//				
-//				for (int inputNum=0;inputNum<numInputs;inputNum++){    // First input values
-//					inVector[inputNum] = inFile.value[inputNum][row];
-//				}
-//				net.activate(inVector);
-//				for (int hiddenNum=0;hiddenNum<numHiddens-h-1; hiddenNum++){
-//					inVector[numInputs+hiddenNum] = net.neuron[hiddenNum].output;
-//				}
-//				targetForOutput      = inFile.value[numInputs][row];
-//				activityError        = net.invThreshFunction(targetForOutput);
-//				equ.leastSquaresAdd(inVector, activityError);
-//			}
-//	
-//			equ.Solve();
-//	
-//			for (int i=0;i<numInputs+numHiddens-h-1;i++){
-//				//double debugg = equ->solution[i];
-//				net.neuron[numHiddens-h-1].weight[i] = equ.solution[i];	// weight from Neuron i to output neuron outnum
-//			}
-//		}
-		// --- end hidden neuron --------------------------------------------------------------------------------
-	}
-
-	/**
-	 * @brief: draws the spiral and the neural mapping
-	 * @param numHiddens
-	 * @param net
-	 * @param inFile
-	 */
-	public void drawMap(int numHiddens, Network net,FileIO inFile) {
-		double inVector[] = new double[4];
-		// Draw classification map	
-		for (int y=0;y<imageHeight;y+=1){
-			for (int x=0;x<imageWidth;x+=1){
-				int color;
-				inVector[0]=1.0;
-				inVector[1]=x/(double)imageWidth;
-				inVector[2]=y/(double)imageHeight;
-				net.activate(inVector);
-				boolean border = false;
-				for (int t=0;t<numHiddens;t++){
-					if (net.neuron[t].output>-0.002 && net.neuron[t].output<0.002 ){
-						border = true;
-					}
-				}
-				color = (int)(net.neuron[numHiddens].output * 2 * 127 + 127) % 255;
-
-				if (color<0) color=0;
-				if (color>255) color=255;
-				if (border){
-					inputOutput.drawPixel(x,y,new Color(0,0,0));
-				}else{
-					inputOutput.drawPixel(x,y,new Color(color,0,255));
-				}
-			}
-		}
-		
-		// draw spiral data
-		for (int row=0;row<inFile.maxRow-1;row++){
-			int x = (int)(inFile.value[1][row]*imageWidth);
-			int y = (int)(inFile.value[2][row]*imageHeight);
-
-			int color=(int)(inFile.value[3][row]*127+100);
-			if (color<0) color=0;
-			if (color>255) color=255;
-			
-			inputOutput.fillRect(x,y ,2,2 ,new Color(color,255,100));
-		}	
-	}
-	
-	public double generateRandomValue(double von, double bis) {
-		return Math.random()*(bis-von)+von;
-		//Example (von -1 bis 1):
-		//0.00 		  => -1
-		//0.50 		  => 0.50*(1+1)-1 = 0
-		//0.999999999 => 0.99*(1+1)-1 = 0.9999
-	}
-	
 	/**
 	 * Construct main frame
-	 * 
+	 *
 	 * @param args
 	 *            passed to MainFrame
 	 */
 	public static void main(String[] args) {
 		new MainFrame(args);
 	}
+
+	/**
+	 * @brief: run method calls my Main and puts the results on the screen
+	 */
+	public void run() {
+
+		myMain();
+
+		repaint();
+		setVisible(true);
+		do {
+		} while (!stop);
+
+		dispose();
+	}
+	
+	/**
+	 * @brief: draws the spiral and the neural mapping
+	 * @param hiddenNeuronNum
+	 * @param net
+	 * @param inFile
+	 */
+	public void drawMap(int hiddenNeuronNum, Network net,FileIO inFile)
+	{
+		double inVector[] = new double[4];
+		    // Draw classification map	
+		for (int y=0;y<600;y+=1){
+			for (int x=0;x<600;x+=1){
+				int col;
+				inVector[0]=1.0;
+				inVector[1]=x/600.0;
+				inVector[2]=y/600.0;
+				net.activate(inVector);
+				col = (int)(net.neuron[hiddenNeuronNum].output *2* 127+127) %255;
+
+				if (col<0) col=0;
+				if (col>255) col=255;
+				inputOutput.drawPixel(x,y,new Color(col,0,255));
+			}
+		}
+		
+		// draw spiral data
+		for (int t=0;t<inFile.maxRow-1;t++){
+			int x1 = (int)(inFile.value[1][t]*600.0);
+			int x2 = (int)(inFile.value[2][t]*600.0);
+
+			int col=(int)(inFile.value[3][t]*127+100);
+			if (col<0) col=0;
+			if (col>255) col=255;
+			//		System.out.println("color="+col);
+				inputOutput.fillRect(x1,x2 ,2,2 ,new Color(col,255,100));
+			//}
+		}
+		
+	}
+
+	/**
+	 * @brief: This is the main method, reading the table, learning the neural mapping
+	 *         and drawing the result
+	 */
+	public void myMain()
+	{
+
+	//	FileIO debug("debug.txt","wb");
+	//	FileIO outFile("output.txt","wb");
+		FileIO inFile = new FileIO("input_big.txt");
+
+		//----------------------------------------------------------------------------------------------
+		// --- read input File -------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------
+		int inputNeuronNum = (int) inFile.readSingleValue();		// first line defines number of input neurons
+		int hiddenNeuronNum = (int) inFile.readSingleValue();
+		
+		inFile.readTable(30,10000); // 30 values in up to 1000 lines
+		int outputNeuronNum = inFile.maxCol - inputNeuronNum;
+
+		//----------------------------------------------------------------------------------------------
+		// --- view input File -------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------
+		
+		int MDims = inputNeuronNum+hiddenNeuronNum; // output not included ...
+
+		System.out.println("inputNeuronNum="+inputNeuronNum);
+		System.out.println("hiddenNeuronNum="+hiddenNeuronNum);
+		System.out.println("outputNeuronNum="+outputNeuronNum);
+
+		// draw data to learn
+		for (int t=0;t<inFile.maxRow-1;t++){
+			int x1 = (int)(inFile.value[1][t]*600.0);
+			int x2 = (int)(inFile.value[2][t]*600.0);
+
+			int col=(int)(inFile.value[3][t]*127+100);
+			if (col<0) col=0;
+			if (col>255) col=255;
+		//		System.out.println("color="+col);
+				inputOutput.fillRect(x1,x2 ,2,2 ,new Color(col,255,100));
+			//}
+		}
+		
+
+		repaint();
+		setVisible(true);
+
+		// -------------------------------------------------------------------------------------------------------
+		// ------------------------ calculate least Squares Optimum for Hidden Neuron ----------------------------
+		// -------------------------------------------------------------------------------------------------------
+
+		
+		Network net = new Network(inputNeuronNum, hiddenNeuronNum + outputNeuronNum);
+
+		double inVector[] = new  double[MDims+10];
+		// ---
+		double squareError=0;
+		// ############################################################################################
+		// ##### random structure #####################################################################
+		// ############################################################################################
+		for (int t=0;t<hiddenNeuronNum;t++){
+			for (int i=0;i<t+inputNeuronNum;i++){
+				net.neuron[t].weight[i]=Math.random()*2.0-1.0;//(rand()%2000)/1000.0-1.0;
+			}
+		}
+		//---- output neuron -------------------------------------------------------------------------------
+		EquationSolver equ;
+		equ = new EquationSolver(inputNeuronNum + hiddenNeuronNum);	
+		for (int time=0; time<inFile.maxRow; time++){
+			for (int t=0;t<MDims;t++){
+				inVector[t]=0;
+			}
+			for (int t=0;t<inputNeuronNum;t++){    // First input values
+				inVector[t] = inFile.value[t][time];
+			}
+			net.activate(inVector);
+			for (int t=0;t<hiddenNeuronNum; t++){
+				inVector[inputNeuronNum+t] = net.neuron[t].output;
+			}
+			double targetForOutput      = inFile.value[inputNeuronNum][time];
+			double activityError        = net.invThreshFunction(targetForOutput);
+			equ.leastSquaresAdd(inVector, activityError);
+
+		}
+
+		equ.Solve();
+
+		for (int t=0;t<inputNeuronNum+hiddenNeuronNum;t++){
+			//double debugg= equ->solution[t];
+			net.neuron[hiddenNeuronNum].weight[t] = equ.solution[t];	// weight from Neuron t to output neuron outnum
+		}
+		// --- end outputneuron --------------------------------------------------------------------------------	
+	
+		 drawMap(hiddenNeuronNum, net, inFile);
+
+	}
+
+	/*
+	public void mouseReleased(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void mousePressed(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void mouseExited(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void mouseEntered(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void mouseMoved(MouseEvent e) {
+		// System.out.println(e.toString());
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void keyTyped(KeyEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void keyReleased(KeyEvent e) {
+		System.out.println(e.toString());
+	}
+
+	public void keyPressed(KeyEvent e) {
+		System.out.println(e.toString());
+	}
+*/
+
 }
