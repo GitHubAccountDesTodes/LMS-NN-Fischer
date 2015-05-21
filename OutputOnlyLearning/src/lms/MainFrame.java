@@ -77,7 +77,7 @@ public class MainFrame extends JFrame {
 	readInputFile();
 	initialization();
 	calculateLeastSquaresOptimum();
-	drawMap(numHiddens, net);
+	drawMap();
 	repaint();
     }
 
@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
     }
 
     public void initialization() {
-	MDims = numHiddens; // output not included ...
+	MDims = numHiddens;
 	net = new Network(numInputs, numHiddens, numOutputs);
     }
 
@@ -132,6 +132,7 @@ public class MainFrame extends JFrame {
 	 */
 
 	// --- output neuron ---
+	
 	double[] inVector;
 	double targetForOutput;
 	double activityError;
@@ -159,38 +160,23 @@ public class MainFrame extends JFrame {
 	}
 
 	equ.Solve();
-
-	// Gebe Ergebnis in der Konsole aus
 	
-	System.out.println("Solution:");
 	for (int weightNum = 0; weightNum < MDims; weightNum++) {
 	    net.neuron[numHiddens].weight[numInputs+weightNum] = equ.solution[weightNum]; // weight from 
 	}
 	
+	// Gebe Ergebnis in der Konsole aus
+	System.out.println("Solution (weights of output neuron):");
 	for (int weightNum = 0; weightNum < net.numWeights; weightNum++) {
 	    System.out.println("weight[" + weightNum + "]: "
 		    + net.neuron[numHiddens].weight[weightNum]);
 	}
-//	System.out.println("weight[" + weightNum + "]: "
-//		    + net.neuron[numHiddens].weight[weightNum]);
-//	weightNum++;
-//	System.out.println("weight[" + weightNum + "]: "
-//		    + net.neuron[numHiddens].weight[weightNum]);
-//	weightNum++;
-//	System.out.println("weight[" + weightNum + "]: "
-//		    + net.neuron[numHiddens].weight[weightNum]);
-	
 
 	// --- end output neuron ---
 
 	// --- hidden neuron ---
 	
-	/*
-	 * In der Methode calculateHiddenWeights bitte weiterarbeiten.
-	 * LG Philip
-	 */
-	
-	//calculateHiddenWeights();
+	calculateHiddenWeights();
 
 	// --- end hidden neuron ---
     }
@@ -200,8 +186,8 @@ public class MainFrame extends JFrame {
 	double targetForOutput;
 	double activityError;
 	EquationSolver equ;
-	
 	// 1. Schritt - Ermitteln des Maximums / Minimums
+	System.out.println("\nBeginne mit Schritt 1 - Ermitteln des Maximums / Minimums");
 
 	double maxError = Double.MIN_VALUE;
 	double error = 0;
@@ -215,32 +201,33 @@ public class MainFrame extends JFrame {
 	    targetForOutput = inputTable[row][numInputs];
 	    error = net.invThreshFunction(net.neuron[numHiddens].output)
 		    - net.invThreshFunction(targetForOutput);
-	    if (error > maxError) {
-		maxError = error;
+	    if (Math.abs(error) > maxError) {
+		maxError = Math.abs(error);
 	    }
 	}
+	maxError++;
+	System.out.println("Ermittelter Max-Fehler: "+maxError);
 
 	// 2. Schritt - Hiddenneuron mit minimaler Gewichtung finden (Kandidat
 	// für Korrektur)
-
+	System.out.println("\nBeginne mit Schritt 2 - Hiddenneuron mit minimaler Gewichtung finden (Kandidat für Korrektur)");
+	
 	double minWeight = Double.MAX_VALUE;
 	double weigth = 0;
-	int kandidatNum;
-	for (kandidatNum = numInputs; kandidatNum < net.numHiddens; kandidatNum++) {
-	    weigth = net.neuron[numHiddens].weight[kandidatNum];
+	int candidateNeuron = 0;
+	for (int weightNum = numInputs; weightNum < net.numWeights; weightNum++) {
+	    weigth = net.neuron[numHiddens].weight[weightNum];
 	    if (weigth < minWeight) {
 		minWeight = weigth;
+		candidateNeuron = weightNum-numInputs;
 	    }
 	}
-
-	// 3. Schritt - Korrektur des Gewichts (Vom Output-Neuron zum
-	// Kandidaten-Neuron)
-
-	net.neuron[numHiddens].weight[kandidatNum] = maxError;
-
+	System.out.println("Ermittelter (Index) Kandidat: "+candidateNeuron);
+	
 	// 4. Schritt - Zurueckfuehren des Targets
-
-	double[] kandidateTargets = new double[inputTable.length];
+	System.out.println("\nBeginne mit Schritt 4 - Zurueckfuehren des Targets");
+	
+	double[] candidateTarget = new double[inputTable.length];
 
 	for (int row = 0; row < inputTable.length; row++) {
 	    inVector = new double[numInputs];
@@ -252,36 +239,51 @@ public class MainFrame extends JFrame {
 	    targetForOutput = inputTable[row][numInputs];
 	    error = net.invThreshFunction(net.neuron[numHiddens].output)
 		    - net.invThreshFunction(targetForOutput);
-	    kandidateTargets[row] = error / maxError;
+	    candidateTarget[row] = error / maxError;
 	}
+	System.out.print("Ermittelte Kandidat Targets: [");
+	for (int targetNum = 0; targetNum<candidateTarget.length; targetNum++) {
+		System.out.print(candidateTarget[targetNum]+",");
+	}
+	System.out.println("]");
+	
+	// 3. Schritt - Korrektur des Gewichts (Vom Output-Neuron zum
+	// Kandidaten-Neuron)
+	System.out.println("\nBeginne mit Schritt 3 - Korrektur des Gewichts (Vom Output-Neuron zum Kandidaten-Neuron)");
+		
+	net.neuron[numHiddens].weight[candidateNeuron+numInputs] = maxError;
+	System.out.println("net.neuron["+numHiddens+"].weight["+(candidateNeuron+numInputs)+"] = "+maxError);
+		
 
 	// 5. Schritt - LeastSquaresOptimum fuer Hidden Neuronen durchfuehren
-
+	System.out.println("\nBeginne mit Schritt 5 - LeastSquaresOptimum fuer Kandidaten Neuronen durchfuehren");
+	MDims = numInputs;
 	equ = new EquationSolver(MDims);
 
 	for (int row = 0; row < inputTable.length; row++) {
 	    inVector = new double[MDims];
-
 	    for (int inputNum = 0; inputNum < numInputs; inputNum++) { // First
 		// input
 		// values
 		inVector[inputNum] = inputTable[row][inputNum];
 	    }
 	    net.activate(inVector);
-	    targetForOutput = kandidateTargets[row];
+	    targetForOutput = candidateTarget[row];
 	    activityError = net.invThreshFunction(targetForOutput);
 	    equ.leastSquaresAdd(inVector, activityError);
 	}
 
 	equ.Solve();
 
+	for (int weightNum = 0; weightNum < MDims; weightNum++) {
+	    net.neuron[candidateNeuron].weight[weightNum] = equ.solution[weightNum]; // weight from 
+	}
+	
 	// Gebe Ergebnis in der Konsole aus
-
-	System.out.println("Solution:");
-	for (int i = 0; i < numInputs + numHiddens; i++) {
-	    net.neuron[numHiddens].weight[i] = equ.solution[i]; // weight from
-	    System.out.println("weight[" + i + "]: "
-		    + net.neuron[numHiddens].weight[i]);
+	System.out.println("Solution (weights of candidate neuron):");
+	for (int weightNum = 0; weightNum < net.numWeights; weightNum++) {
+	    System.out.println("weight[" + weightNum + "]: "
+		    + net.neuron[candidateNeuron].weight[weightNum]);
 	}
 
 	// for (int h=0;h<numHiddens;h++) {
@@ -319,7 +321,7 @@ public class MainFrame extends JFrame {
      * @param net
      * @param inFile
      */
-    public void drawMap(int numHiddens, Network net) {
+    public void drawMap() {
 	double inVector[] = new double[4];
 	// Draw classification map
 	for (int y = 0; y < imageHeight; y += 1) {
