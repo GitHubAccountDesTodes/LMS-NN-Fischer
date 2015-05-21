@@ -1,3 +1,4 @@
+
 /************************************************************************
  * \brief: a single Neuron class * * (c) copyright by Jörn Fischer * * *
  *
@@ -14,10 +15,10 @@ public class Neuron {
 //    public int numWeights;
 
 	/**
-	 * @param numOfWeights
 	 * @brief: setter function to set the number of weights
+	 * @param numOfWeights
 	 */
-	public void setNumOfWeights(int numWeights) {
+	public void setNumWeights(int numWeights) {
 //		this.numWeights = numWeights;
 		weight = new double[numWeights];
 	}
