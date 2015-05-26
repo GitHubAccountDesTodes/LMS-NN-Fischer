@@ -35,6 +35,7 @@ public class MainFrame extends JFrame {
 	private int numOutputs;
 	private int MDims; // Matrix Dimensions
 
+
 	public MainFrame(String[] args) {
 		super("Output Only Learning Networks");
 
@@ -116,7 +117,6 @@ public class MainFrame extends JFrame {
 	}
 
 	public void initialization() {
-		MDims = numHiddens;
 		net = new Network(numInputs, numHiddens, numOutputs);
 	}
 
@@ -128,10 +128,24 @@ public class MainFrame extends JFrame {
 
 		// --- output neuron ---
 
+		calculateOutputWeigths();
+
+		// --- end output neuron ---
+
+		// --- hidden neuron ---
+
+		calculateHiddenWeights();
+
+		// --- end hidden neuron ---
+	}
+
+	public void calculateOutputWeigths() {
 		double[] inVector;
 		double targetForOutput;
 		double activityError;
 		EquationSolver equ;
+
+		MDims = numHiddens;
 
 		equ = new EquationSolver(MDims);
 
@@ -166,14 +180,6 @@ public class MainFrame extends JFrame {
 			System.out.println("weight[" + weightNum + "]: "
 					+ net.neuron[numHiddens].weight[weightNum]);
 		}
-
-		// --- end output neuron ---
-
-		// --- hidden neuron ---
-
-		//calculateHiddenWeights();
-
-		// --- end hidden neuron ---
 	}
 
 	public void calculateHiddenWeights() {
@@ -212,12 +218,17 @@ public class MainFrame extends JFrame {
 		int candidateNeuron = 0;
 		for (int weightNum = numInputs; weightNum < net.numWeights; weightNum++) {
 			weigth = net.neuron[numHiddens].weight[weightNum];
-			if (weigth < minWeight) {
-				minWeight = weigth;
+			if (Math.abs(weigth) < minWeight) {
+				minWeight = Math.abs(weigth);
 				candidateNeuron = weightNum - numInputs;
 			}
 		}
-		System.out.println("Ermittelter (Index) Kandidat: " + candidateNeuron);
+		System.out.println("Ermittelter (Index) Kandidat: " + candidateNeuron + " mit Gewicht " + minWeight);
+
+
+		// 3. Schritt - Korrektur des Gewichts (Vom Output-Neuron zum
+		// Kandidaten-Neuron)
+		System.out.println("\nBeginne mit Schritt 3 - Korrektur des Gewichts (Vom Output-Neuron zum Kandidaten-Neuron)");
 
 		// 4. Schritt - Zurueckfuehren des Targets
 		System.out.println("\nBeginne mit Schritt 4 - Zurueckfuehren des Targets");
@@ -241,10 +252,6 @@ public class MainFrame extends JFrame {
 			System.out.print(candidateTarget[targetNum] + ",");
 		}
 		System.out.println("]");
-
-		// 3. Schritt - Korrektur des Gewichts (Vom Output-Neuron zum
-		// Kandidaten-Neuron)
-		System.out.println("\nBeginne mit Schritt 3 - Korrektur des Gewichts (Vom Output-Neuron zum Kandidaten-Neuron)");
 
 		net.neuron[numHiddens].weight[candidateNeuron + numInputs] = maxError;
 		System.out.println("net.neuron[" + numHiddens + "].weight[" + (candidateNeuron + numInputs) + "] = " + maxError);
@@ -280,40 +287,9 @@ public class MainFrame extends JFrame {
 			System.out.println("weight[" + weightNum + "]: "
 					+ net.neuron[candidateNeuron].weight[weightNum]);
 		}
-
-		// for (int h=0;h<numHiddens;h++) {
-		// equ = new EquationSolver(MDims-h-1);
-		//
-		// for (int row=0; row<inFile.maxRow; row++){
-		// inVector = new double[MDims-h-1];
-		//
-		// for (int inputNum=0;inputNum<numInputs;inputNum++){ // First input
-		// values
-		// inVector[inputNum] = inFile.value[inputNum][row];
-		// }
-		// net.activate(inVector);
-		// for (int hiddenNum=0;hiddenNum<numHiddens-h-1; hiddenNum++){
-		// inVector[numInputs+hiddenNum] = net.neuron[hiddenNum].output;
-		// }
-		// targetForOutput = inFile.value[numInputs][row];
-		// activityError = net.invThreshFunction(targetForOutput);
-		// equ.leastSquaresAdd(inVector, activityError);
-		// }
-		//
-		// equ.Solve();
-		//
-		// for (int i=0;i<numInputs+numHiddens-h-1;i++){
-		// //double debugg = equ->solution[i];
-		// net.neuron[numHiddens-h-1].weight[i] = equ.solution[i]; // weight
-		// from Neuron i to output neuron outnum
-		// }
-		// }
 	}
 
 	/**
-	 * @param numHiddens
-	 * @param net
-	 * @param inFile
 	 * @brief: draws the spiral and the neural mapping
 	 */
 	public void drawMap() {
@@ -328,7 +304,7 @@ public class MainFrame extends JFrame {
 				net.activate(inVector);
 				boolean border = false;
 				for (int t = 0; t < numHiddens; t++) {
-					if (net.neuron[t].output > -0.002 && net.neuron[t].output < 0.002) {
+					if (net.neuron[t].output > -0.0002 && net.neuron[t].output < 0.0002) {
 						border = true;
 						break;
 					}
@@ -341,7 +317,7 @@ public class MainFrame extends JFrame {
 					color = 255;
 
 				if (border) {
-					// schwarze Linien
+					//  schwarze Linien
 					inputOutput.drawPixel(x, y, new Color(0, 0, 0));
 				} else {
 					inputOutput.drawPixel(x, y, new Color(color, 0, 255));
