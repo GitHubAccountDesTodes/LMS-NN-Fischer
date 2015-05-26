@@ -128,7 +128,7 @@ public class Network {
     public void activate(double inVector[]) {
 
 	// hidden layer
-	for (int neuronNum = 0; neuronNum < neuron.length; neuronNum++) {
+	for (int neuronNum = 0; neuronNum < numHiddens; neuronNum++) {
 	    double sum = 0;
 	    for (int weightNum = 0; weightNum < numWeights; weightNum++) {
 		if (weightNum < numInputs) {
