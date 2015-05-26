@@ -185,6 +185,30 @@ public class MainFrame extends JFrame {
 		    + net.neuron[numHiddens].weight[weightNum]);
 	}
     }
+    
+    public void calculateHiddenWeightsNew() {
+	// Loop Durchlaufe alle Lerndaten; Duchlaufzaehler j
+	for(int j = 0; j<inputTable.length;j++){
+	    // Fehler für Output Neuron berechnen: inverse(Oj)-inverse(Tj)
+	    net.activate(inputTable[j]);
+	    double inverseTj = net.invThreshFunction(inputTable[j][inputTable[j].length-1]);
+	    double inverseOj = net.invThreshFunction(net.neuron[numHiddens].output);
+	    // Summe der Gewichten zwischen Hidden Neuronen und Output Neuronen
+	    double sumOutputWeights = 0;
+	    for(int weightNum = 0; weightNum<numHiddens; weightNum++){
+		sumOutputWeights += net.neuron[numHiddens].weight[weightNum];
+	    }
+	    //Durchlaufe alle Hidden Neuronen; Durchlaufzaehler i
+	    for(int i = 0; i<numHiddens;i++){
+	    	// Fehler anhand der Gewichten auf Outputs von Hidden Neuronen aufteilen
+	    	// Target für Hidden Neuronen: Oj+Fehleranteil
+	    	// inverse(Ti)
+	    	// Target Th = (inverse(Oj) - inverse(Tj))/(Gewicht zum Output-Neuron)
+	    	// Gleichung für jedes Hidden Neuron aufstellen
+	    }
+	// Endloop
+	}
+    }
 
     public void calculateHiddenWeights() {
 	double[] inVector;
