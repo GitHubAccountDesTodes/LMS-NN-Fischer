@@ -79,13 +79,6 @@ public class Network {
 			for (int i = 0; i < numInputs; i++) {
 				neuron[hiddenNeuronNum].weight[i] = generateRandomValue(-1, 1);
 			}
-			// Ausgabe zum Kontrollieren
-			System.out.println("Hidden Neuron: " + hiddenNeuronNum);
-			for (int i = 0; i < numWeights; i++) {
-				System.out.println("weight[" + i + "]: "
-						+ neuron[hiddenNeuronNum].weight[i]);
-			}
-			System.out.println();
 		}
 		
 		// initialisiere Gewichte fuer Output Neuron
@@ -93,14 +86,13 @@ public class Network {
 			for (int weightNum = numInputs; weightNum < numWeights; weightNum++) {
 				neuron[outputNum].weight[weightNum] = generateRandomValue(-1, 1);
 			}
-			// Ausgabe zum Kontrollieren
-			System.out.println("Output Neuron: " + outputNum);
-			for (int i = 0; i < numWeights; i++) {
-				System.out.println("weight[" + i + "]: "
-						+ neuron[outputNum].weight[i]);
-			}
-			System.out.println();
 		}
+		// Gebe Ergebnis in der Konsole aus
+//		for(int i = 0; i<neuron.length;i++){
+//		    System.out.println("Neuron "+i+":");
+//		    neuron[i].printWeight();
+//		    System.out.println();
+//		}
 	}
 
     public double generateRandomValue(double von, double bis) {
@@ -130,27 +122,27 @@ public class Network {
 	// hidden layer
 	for (int neuronNum = 0; neuronNum < numHiddens; neuronNum++) {
 	    double sum = 0;
-	    for (int weightNum = 0; weightNum < numWeights; weightNum++) {
+	    for (int weightNum = 0; weightNum < numInputs; weightNum++) {
 		if (weightNum < numInputs) {
 		    sum += neuron[neuronNum].weight[weightNum]
 			    * inVector[weightNum];
 		}
-		if (weightNum >= numInputs
-			&& (weightNum - numInputs != neuronNum)) {
-		    // sum += neuron[neuronNum].weight[weightNum] *
-		    // neuron[weightNum-numInputs].output;
-		}
+//		if (weightNum >= numInputs
+//			&& (weightNum - numInputs != neuronNum)) {
+//		     sum += neuron[neuronNum].weight[weightNum] *
+//		     neuron[weightNum-numInputs].output;
+//		}
 	    }
 
 	    neuron[neuronNum].output = threshFunction(sum);
 	}
 	// output neuron
 	double sum = 0;
-	for (int weightNum = 0; weightNum < numWeights; weightNum++) {
-	    if (weightNum < numInputs) {
+	for (int weightNum = numInputs; weightNum < numWeights; weightNum++) {
+//	    if (weightNum < numInputs) {
 //		sum += neuron[numHiddens].weight[weightNum]
 //			* inVector[weightNum];
-	    }
+//	    }
 	    if (weightNum >= numInputs) {
 		sum += neuron[numHiddens].weight[weightNum]
 			* neuron[weightNum - numInputs].output;

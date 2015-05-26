@@ -23,6 +23,12 @@ public class Neuron {
 //		this.numWeights = numWeights;
 		weight = new double[numWeights];
     }
+    
+    public void printWeight(){
+	for(int i = 0; i<weight.length;i++){
+	    System.out.println("weight["+i+"]: "+weight[i]);
+	}
+    }
 
     // static private double transferFunctionDerivative(double x) {
     // // tanh derivative
