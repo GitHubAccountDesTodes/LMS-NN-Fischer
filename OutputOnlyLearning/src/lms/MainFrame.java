@@ -191,55 +191,13 @@ public class MainFrame extends JFrame {
     }
     
     public void calculateHiddenWeightsNew() {
-	// init EquationSolvers für jedes Hidden Neuron
-	EquationSolver[] equs = new EquationSolver[numHiddens];
-	for(int equNum = 0; equNum<equs.length;equNum++){
-	    equs[equNum] = new EquationSolver(numInputs);
-	}	
-	double sumOutputWeights = 0;
-	for (int weightNum = 0; weightNum < numHiddens; weightNum++) {
-	    sumOutputWeights += net.neuron[numHiddens].weight[weightNum];
-	}
-	// Loop Durchlaufe alle Lerndaten; Duchlaufzaehler j
-	for(int j = 0; j<inputTable.length;j++){
-	    net.activate(inputTable[j]);
-//	    // Fehler für Output Neuron berechnen: inverse(Oj)-inverse(Tj)
-	    double inverseTj = net.invThreshFunction(inputTable[j][inputTable[j].length-1]);
-//	    double inverseOj = net.invThreshFunction(net.neuron[numHiddens].output);
-//	    double ErrorOutput = inverseTj-inverseOj;
-	    // Summe der Gewichten zwischen Hidden Neuronen und Output Neuronen
-	    //Durchlaufe alle Hidden Neuronen; Durchlaufzaehler i
-	    for(int i = 0; i<numHiddens;i++){
-	    	// Fehler anhand der Gewichten auf Outputs von Hidden Neuronen aufteilen
-		double Ti = inverseTj/sumOutputWeights*net.neuron[numHiddens].weight[i];
-	    	// Target für Hidden Neuronen: Oj+Fehleranteil
-//		double Ti = net.neuron[i].output+Errori;
-	    	// inverse(Ti)
-		double inverseTi = net.invThreshFunction(Ti);
-	    	// Gleichung für jedes Hidden Neuron aufstellen
-		equs[i].leastSquaresAdd(inputTable[j], inverseTi);
-		if (Double.isNaN(inverseTi)){
-		    System.out.println(j + ". Verlauf: Target "+Ti);
-		    System.out.println("weight "+net.neuron[numHiddens].weight[i]);
-		}
-	    }
-	// Endloop
-	}
-	// Gleichungen lösen
-	for(int equNum = 0; equNum<equs.length;equNum++){
-	    equs[equNum].Solve();
-	}
-	// Gewichte speichern
-	for(int i = 0; i<numHiddens; i++){
-	    net.neuron[i].weight = equs[i].solution;
-	}
+	
 	//Gewichte in der Konsole ausgeben
 	for(int i = 0; i<net.neuron.length;i++){
 	    System.out.println("Neuron "+i+":");
 	    net.neuron[i].printWeight();
 	    System.out.println();
 	}
-	 System.out.println("sumOutputWeights"+sumOutputWeights);
     }
 
     public void calculateHiddenWeights() {
