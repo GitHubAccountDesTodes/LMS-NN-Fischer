@@ -137,8 +137,8 @@ public class MainFrame extends JFrame {
 	// --- end output neuron ---
 
 	// --- hidden neuron ---
-	for (int i=0;i<5;i++)
-	    calculateHiddenWeights();
+
+	calculateHiddenWeights();
 
 	// --- end hidden neuron ---
     }
