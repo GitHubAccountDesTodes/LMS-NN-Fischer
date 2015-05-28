@@ -139,13 +139,13 @@ public class MainFrame extends JFrame {
 
 	// --- output neuron ---
 	
-//	calculateOutputWeigths();
+	calculateOutputWeigths();
 
 	// --- end output neuron ---
 
 	// --- hidden neuron ---
 
-	calculateHiddenWeightsNew();
+//	calculateHiddenWeightsNew();
 
 	// --- end hidden neuron ---
     }
@@ -188,16 +188,62 @@ public class MainFrame extends JFrame {
 	// Gebe Ergebnis in der Konsole aus
 	System.out.println("Solution (weights of output neuron):");
 	net.neuron[numHiddens].printWeight();
+	
+	// aktiviere alle inputs und berechne den Fehler
+	for(int i = 0; i<inputTable.length;i++){
+		net.activate(inputTable[i]);
+		System.out.println("Fehler "+i+"; "+(inputTable[i][inputTable[i].length-1]-net.neuron[numHiddens].output));
+	}
     }
     
     public void calculateHiddenWeightsNew() {
-	
-	//Gewichte in der Konsole ausgeben
-	for(int i = 0; i<net.neuron.length;i++){
-	    System.out.println("Neuron "+i+":");
-	    net.neuron[i].printWeight();
-	    System.out.println();
-	}
+    	// init outputArray
+    	double[] errors = new double[inputTable.length];
+    	// setze Gewicht eines Neuron auf null
+    	net.neuron[numHiddens].weight[numInputs] = 0;
+    	// init maxError
+    	double maxError = 0;
+    	// Durchlaufe alle Inputs
+    	for(int i = 0; i<inputTable.length; i++){
+    		// rechne output
+    		net.activate(inputTable[i]);
+    		// merke Fehler
+    		double output = net.neuron[numHiddens].output;
+    		errors[i] = net.invThreshFunction(inputTable[i][inputTable[i].length-1])-net.invThreshFunction(output);
+    		// merke maxError
+    		if(Math.abs(errors[i])>maxError){
+    			maxError = errors[i];
+    		}
+    	}
+    	// setze Gewicht des Neuron auf maxError
+    	net.neuron[numHiddens].weight[numInputs] = maxError;
+    	// init Equationsolver: dim = numInputs
+    	EquationSolver equ = new EquationSolver(numInputs);
+    	// Durchlaufe alle outputs
+    	for(int i = 0; i<errors.length;i++){
+    		// Target = (inv(Ti)-inv(Oi))/maxError
+			double targetCandidate = errors[i]/maxError;
+    		// add equation
+			equ.leastSquaresAdd(inputTable[i], targetCandidate);
+    	}
+    	// solve;
+    	equ.Solve();
+    	// setze neue Gewichte
+    	net.neuron[0].weight = equ.solution;
+    	
+    	
+		// Gewichte in der Konsole ausgeben
+		for (int i = 0; i < net.neuron.length; i++) {
+			System.out.println("Neuron " + i + ":");
+			net.neuron[i].printWeight();
+			System.out.println();
+		}
+		
+		// aktiviere alle inputs und berechne den Fehler
+		for(int i = 0; i<inputTable.length;i++){
+			net.activate(inputTable[i]);
+			System.out.println("Fehler "+i+"; "+(inputTable[i][inputTable[i].length-1]-net.neuron[numHiddens].output));
+		}
     }
 
     public void calculateHiddenWeights() {
