@@ -87,12 +87,12 @@ public class Network {
 				neuron[outputNum].weight[weightNum] = generateRandomValue(-1, 1);
 			}
 		}
-//		 Gebe Ergebnis in der Konsole aus
-		for(int i = 0; i<neuron.length;i++){
-		    System.out.println("Neuron "+i+":");
-		    neuron[i].printWeight();
-		    System.out.println();
-		}
+//		// Gebe Ergebnis in der Konsole aus
+//		for (int i = 0; i < neuron.length; i++) {
+//			System.out.println("Neuron " + i + ":");
+//			neuron[i].printWeight();
+//			System.out.println();
+//		}
 	}
 
     public double generateRandomValue(double von, double bis) {
