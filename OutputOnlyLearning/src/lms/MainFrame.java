@@ -21,7 +21,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	// private static final String inputFileName = "res/input_big.txt";
+//	private static final String inputFileName = "res/input_big.txt";
 	private static final String inputFileName = "res/input.txt";
 	private static final int imageWidth = 600;
 	private static final int imageHeight = 600;
@@ -47,13 +47,6 @@ public class MainFrame extends JFrame {
 	 */
 	public static void main(String[] args) {
 		new MainFrame(args);
-		// Network n = new Network(0, 0, 0);
-		// double y = 0.948;
-		// double x = 0.55373;
-		// double r1 = n.invThreshFunction(x)-n.invThreshFunction(y);
-		// double r2 = n.invThreshFunction(x-y);
-		// System.out.println(r1);
-		// System.out.println(r2);
 	}
 
 	public MainFrame(String[] args) {
@@ -140,9 +133,9 @@ public class MainFrame extends JFrame {
 
 		// --- output neuron ---
 
-		for (int i = 0; i < net.neuron.length - 1; i++) {
-			calculateHiddenWeightsNew(i);
-			// drawMap();
+		for (int i = 0; i < 70; i++) {
+			calculateHiddenWeightsNew(minWeight());
+//			 drawMap();
 		}
 //		calculateOutputWeigths();
 
@@ -204,6 +197,20 @@ public class MainFrame extends JFrame {
 		}
 	}
 
+	public int minWeight(){
+		double[] weights = net.neuron[numHiddens].weight;
+		double minW = Double.MAX_VALUE;
+		int minWIndex = numInputs;
+		for(int i = numInputs; i<weights.length; i++){
+			if(Math.abs(weights[i])<Math.abs(minW)){
+				minW = weights[i];
+				minWIndex = i;
+//				System.out.println("min: "+minW);
+			}
+		}
+		return minWIndex-numInputs;
+	}
+	
 	public void calculateHiddenWeightsNew(int neuronIndex) {
 		// init outputArray
 		double[] errors = new double[inputTable.length];
@@ -243,7 +250,7 @@ public class MainFrame extends JFrame {
 				invTargetCandidate = net.invThreshFunction(targetCandidate);
 			}
 			// add equation
-			equ.leastSquaresAdd(inputTable[i], targetCandidate);
+			equ.leastSquaresAdd(inputTable[i], invTargetCandidate);
 		}
 		// solve;
 		equ.Solve();
@@ -253,16 +260,6 @@ public class MainFrame extends JFrame {
 		// Gewichte in der Konsole ausgeben
 		System.out.println("Neuron " + neuronIndex + ":");
 		net.neuron[neuronIndex].printWeight();
-
-		// aktiviere alle inputs und berechne den Fehler
-//		for (int i = 0; i < inputTable.length; i++) {
-//			net.activate(inputTable[i]);
-//			System.out
-//					.println("Fehler "
-//							+ i
-//							+ "; "
-//							+ (inputTable[i][inputTable[i].length - 1] - net.neuron[numHiddens].output));
-//		}
 	}
 
 	public void calculateHiddenWeights() {
