@@ -46,7 +46,17 @@ public class MainFrame extends JFrame {
 	 *            passed to MainFrame
 	 */
 	public static void main(String[] args) {
-		new MainFrame(args);
+//		new MainFrame(args);
+		double[][] data = { { 6, 7, 8 }, { 3, 2, 3 }, { 7, 7, 1 }, { 1, 1, 1 },}; 
+		EquationSolver equ = new EquationSolver(3);
+		equ.leastSquaresAdd(data[0], 109);
+		equ.leastSquaresAdd(data[1], 40);
+		equ.leastSquaresAdd(data[2], 63);
+//		equ.leastSquaresAdd(data[3], 10);
+		equ.Solve();
+		for (int i = 0; i<equ.solution.length;i++){
+			System.out.println(equ.solution[i]);
+		}
 	}
 
 	public MainFrame(String[] args) {
@@ -133,7 +143,7 @@ public class MainFrame extends JFrame {
 
 		// --- output neuron ---
 
-		for (int i = 0; i < 70; i++) {
+		for (int i = 0; i < 1; i++) {
 			calculateHiddenWeightsNew(minWeight());
 //			 drawMap();
 		}
@@ -260,6 +270,11 @@ public class MainFrame extends JFrame {
 		// Gewichte in der Konsole ausgeben
 		System.out.println("Neuron " + neuronIndex + ":");
 		net.neuron[neuronIndex].printWeight();
+		
+//		double[] res = equ.solution;
+//		for(int i = 0; i<inputTable.length;i++){
+//			
+//		}
 	}
 
 	public void calculateHiddenWeights() {
