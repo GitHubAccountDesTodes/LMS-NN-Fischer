@@ -58,7 +58,7 @@ public class EquationSolver {
 					matrix[j][k]-=matrix[i][k]*matrix[j][i]/matrix[i][i];
 				 }
 				 else{
-					 System.out.println("Division durch 0!");
+					 //System.out.println("Division durch 0!");
 					 matrix[j][k]-=matrix[i][k]*matrix[j][i]/0.00000000000000000001;
 				 }
 			 }
@@ -80,7 +80,7 @@ public class EquationSolver {
 		 if (matrix[j][j]!=0){
 			solution[j]=(matrix[j][MDims]-sum)/matrix[j][j];
 		 }else{
-			System.out.println("Division durch 0!");
+			//System.out.println("Division durch 0!");
 			solution[j]=(matrix[j][MDims]-sum)/0.000000000000000000001;
 		 }
 	 }
