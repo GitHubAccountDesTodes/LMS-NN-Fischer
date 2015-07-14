@@ -1,19 +1,16 @@
 package lms;
 
-//import java.util.Vector;
-
 /************************************************************************
  * \brief: implementation of a network of neurons and its activation * method *
- * * (c) copyright by JÃ¶rn Fischer * * *
+ * * (c) copyright by Jörn Fischer * * *
  * 
- * @autor: Prof.Dr.JÃ¶rn Fischer *
+ * @autor: Prof.Dr.Jörn Fischer *
  * @email: j.fischer@hs-mannheim.de * *
  * @file : Network.java *
  *************************************************************************/
 
 public class Network {
 	public Neuron neuron[]; // contains the neurons of numHiddens + numOutputs
-	// neurons
 	public int numWeights; // contains numHiddens + numInputs weights
 	public int numInputs;
 	public int numHiddens;
@@ -82,8 +79,7 @@ public class Network {
 			// Ausgabe zum Kontrollieren
 			System.out.println("Hidden Neuron: " + hiddenNeuronNum);
 			for (int i = 0; i < numWeights; i++) {
-				System.out.println("weight[" + i + "]: "
-						+ neuron[hiddenNeuronNum].weight[i]);
+				System.out.println("weight[" + i + "]: " + neuron[hiddenNeuronNum].weight[i]);
 			}
 			System.out.println();
 		}
@@ -96,8 +92,7 @@ public class Network {
 			// Ausgabe zum Kontrollieren
 			System.out.println("Output Neuron: " + outputNum);
 			for (int i = 0; i < numWeights; i++) {
-				System.out.println("weight[" + i + "]: "
-						+ neuron[outputNum].weight[i]);
+				System.out.println("weight[" + i + "]: " + neuron[outputNum].weight[i]);
 			}
 			System.out.println();
 		}
@@ -132,49 +127,36 @@ public class Network {
 			double sum = 0;
 			for (int weightNum = 0; weightNum < numWeights; weightNum++) {
 				if (weightNum < numInputs) {
-					sum += neuron[neuronNum].weight[weightNum]
-							* inVector[weightNum];
+					sum += neuron[neuronNum].weight[weightNum] * inVector[weightNum];
 				}
-				if (weightNum >= numInputs
-						&& (weightNum - numInputs != neuronNum)) {
-					// sum += neuron[neuronNum].weight[weightNum] *
-					// neuron[weightNum-numInputs].output;
+				if (weightNum >= numInputs && (weightNum - numInputs != neuronNum)) {
+					// sum += neuron[neuronNum].weight[weightNum] * neuron[weightNum-numInputs].output;
 				}
 			}
 
 			neuron[neuronNum].output = threshFunction(sum);
-			if (Math.abs(neuron[numHiddens].output) >= 1.0) {
-				neuron[numHiddens].output = neuron[numHiddens].output <= -1.0
-						? -0.99999999999
-						: neuron[numHiddens].output >= 1.0 ? 0.99999999999 : 0;
-				if (neuron[numHiddens].output == 0) {
-					System.out
-							.println("ERRORRRRRR!!!!!!lKlöasjöfäjas<lkjfasä>>>><<<<<kjsälfjasäfjasäpfjasäasdfadsfas");
-				}
+			if (Math.abs(neuron[numHiddens].output) == 1.0) {
+				neuron[numHiddens].output = neuron[numHiddens].output > 0
+						? 1.0 - 1.000000000000001
+						: -1.0 + 1.000000000000001;
 			}
 		}
 		// output neuron
 		double sum = 0;
 		for (int weightNum = 0; weightNum < numWeights; weightNum++) {
 			if (weightNum < numInputs) {
-				// sum += neuron[numHiddens].weight[weightNum]
-				// * inVector[weightNum];
+				// sum += neuron[numHiddens].weight[weightNum] * inVector[weightNum];
 			}
 			if (weightNum >= numInputs) {
-				sum += neuron[numHiddens].weight[weightNum]
-						* neuron[weightNum - numInputs].output;
+				sum += neuron[numHiddens].weight[weightNum] * neuron[weightNum - numInputs].output;
 			}
 		}
 
 		neuron[numHiddens].output = threshFunction(sum);
-		if (Math.abs(neuron[numHiddens].output) >= 1.0) {
-			neuron[numHiddens].output = neuron[numHiddens].output <= -1.0
-					? -0.99999999999
-					: neuron[numHiddens].output >= 1.0 ? 0.99999999999 : 0;
-			if (neuron[numHiddens].output == 0) {
-				System.out
-						.println("ERRORRRRRR!!!!!!lKlöasjöfäjas<lkjfasä>>>><<<<<kjsälfjasäfjasäpfjasäasdfadsfas");
-			}
+		if (Math.abs(neuron[numHiddens].output) == 1.0) {
+			neuron[numHiddens].output = neuron[numHiddens].output > 0
+					? 1.0 - 0.000000000000001
+					: -1.0 + 0.000000000000001;
 		}
 	}
 }
