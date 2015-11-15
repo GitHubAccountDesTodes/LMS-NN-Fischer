@@ -57,13 +57,15 @@ public class MainFrame extends JFrame {
 		setLocation(getX() - frameWidth / 2, getY() - frameHeight / 2);
 		setVisible(true);
 		setLayout(null);
-		setSize(frameWidth, frameHeight);
+		int horizontalInsets = getInsets().right+getInsets().left;
+		int verticalInsets = getInsets().top + getInsets().bottom;
+		setSize(frameWidth + horizontalInsets, frameHeight + verticalInsets);
 
 		canvas.img = createImage(imageWidth, imageHeight);
-		canvas.setLocation((frameWidth - imageWidth) / 2,
-				(frameHeight - imageHeight) / 2);
+		canvas.setLocation(border / 2, border / 2);
 		canvas.setSize(imageWidth, imageHeight);
 		add(canvas);
+		System.out.println(getInsets());
 
 		run();
 	}
