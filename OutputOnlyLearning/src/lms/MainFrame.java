@@ -46,17 +46,7 @@ public class MainFrame extends JFrame {
 	 *            passed to MainFrame
 	 */
 	public static void main(String[] args) {
-//		new MainFrame(args);
-		double[][] data = { { 6, 7, 8 }, { 3, 2, 3 }, { 7, 7, 1 }, { 1, 1, 1 },}; 
-		EquationSolver equ = new EquationSolver(3);
-		equ.leastSquaresAdd(data[0], 109);
-		equ.leastSquaresAdd(data[1], 40);
-		equ.leastSquaresAdd(data[2], 63);
-//		equ.leastSquaresAdd(data[3], 10);
-		equ.Solve();
-		for (int i = 0; i<equ.solution.length;i++){
-			System.out.println(equ.solution[i]);
-		}
+		new MainFrame(args);
 	}
 
 	public MainFrame(String[] args) {
@@ -67,12 +57,10 @@ public class MainFrame extends JFrame {
 		setLocation(getX() - frameWidth / 2, getY() - frameHeight / 2);
 		setVisible(true);
 		setLayout(null);
-		int horizontalInsets = getInsets().right;
-		int verticalInsets = getInsets().top + getInsets().bottom;
-		setSize(frameWidth + horizontalInsets, frameHeight + verticalInsets);
+		setSize(frameWidth, frameHeight);
 
 		canvas.img = createImage(imageWidth, imageHeight);
-		canvas.setLocation((frameWidth - getInsets().left - imageWidth) / 2,
+		canvas.setLocation((frameWidth - imageWidth) / 2,
 				(frameHeight - imageHeight) / 2);
 		canvas.setSize(imageWidth, imageHeight);
 		add(canvas);
@@ -143,9 +131,9 @@ public class MainFrame extends JFrame {
 
 		// --- output neuron ---
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 30; i++) {
 			calculateHiddenWeightsNew(minWeight());
-//			 drawMap();
+			 drawMap();
 		}
 //		calculateOutputWeigths();
 
