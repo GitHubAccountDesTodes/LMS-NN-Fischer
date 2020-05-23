@@ -1,2 +1,2 @@
 # LMS-NN-Fischer
-High school project
+Least Mean Square Neural Network project of Hochschule Mannheim
